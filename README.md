@@ -31,16 +31,14 @@ python3 -m pip install numpy
 sudo apt-get install libatlas-base-dev
 ```
 
-### Project Structure
+### Project Files
 
-Inheritance:
+<img src="http://www.plantuml.com/plantuml/png/LL3DJiCm3BxdAQBTnoEWXH56fQsJbY34qNIcL4fJrAH2UtkqMZ7EBTzFxE_pBcMOyp86DMEN8VO1zMQ48Jxyt3OQaZwPfjMLY1adLgstPwbsK_mQ-YBlp-rBSv1wne3z36DnU7kqXuivIK_Aa8UKXouLb_F6DyutUoTztmlyub0yhs_ctJPLbe0GEShHchRgSKiOqpGdxlBXRElEbsh79oGiXYVZhDIka47gpyQRrQFMesstZtGVXjoMcPAwOD6KEOhEKEHKwtZoqANB0idT8qbCAoMZrWrtXZjeHI_wIjNv8s5EH8Yp4EIKrLZrtu-jcbCBIkqmNfSn_040">
+
+### Class Inheritance
 
 <img src="http://www.plantuml.com/plantuml/png/SoWkIImgAStDuN99B4bqIYnETSv9B2vMiAdHrLLmpabDp0FpkT1aO8gnIdgK9fQdPcALyatCpCCkaLgIcW_cOtE8RsLmQbvnVb4nLht19OabcSKbcSdOfKDISrBJYn9p8P8EgNafGEy20000">
 
-
-Dependencies: 
-
-<img src="http://www.plantuml.com/plantuml/png/LL3DJiCm3BxdAQBTnoEWXH56fQsJbY34qNIcL4fJrAH2UtkqMZ7EBTzFxE_pBcMOyp86DMEN8VO1zMQ48Jxyt3OQaZwPfjMLY1adLgstPwbsK_mQ-YBlp-rBSv1wne3z36DnU7kqXuivIK_Aa8UKXouLb_F6DyutUoTztmlyub0yhs_ctJPLbe0GEShHchRgSKiOqpGdxlBXRElEbsh79oGiXYVZhDIka47gpyQRrQFMesstZtGVXjoMcPAwOD6KEOhEKEHKwtZoqANB0idT8qbCAoMZrWrtXZjeHI_wIjNv8s5EH8Yp4EIKrLZrtu-jcbCBIkqmNfSn_040">
 
 ### Configuration File
 
