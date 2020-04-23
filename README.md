@@ -34,56 +34,13 @@ sudo apt-get install libatlas-base-dev
 ### Project Structure
 
 Inheritance:
-```plantuml
-@startuml
-DataBaseClass <|-- CleanClass
-BaseClass <|-- DataBaseClass
-BaseClass <|-- HuaweiClass
-BaseClass <|-- MainClass
-BaseClass <|-- MeteoClass
-DataBaseClass <|-- MySensorsClass
-BaseClass <|-- StatisticsClass
-BaseClass <|-- TelegramClass
-@enduml
-```
+
+<img src="http://www.plantuml.com/plantuml/png/SoWkIImgAStDuN99B4bqIYnETSv9B2vMiAdHrLLmpabDp0FpkT1aO8gnIdgK9fQdPcALyatCpCCkaLgIcW_cOtE8RsLmQbvnVb4nLht19OabcSKbcSdOfKDISrBJYn9p8P8EgNafGEy20000">
+
 
 Dependencies: 
-```plantuml
-@startuml
-rectangle "main.py" as MAIN 
-rectangle "meteo.py" as METEO
-rectangle "config.py" as CONFIG
-rectangle "telegram.py" as TELEGRAM
-rectangle "statistics.py" as STATISTICS
-rectangle "huawei.py" as HUAWEI
-rectangle "clean.py" as CLEAN
-rectangle "mysensors.py" as MYSENSORS
-rectangle "base.py" as BASE
-rectangle "database.py" as DATABASE
 
-MAIN --> METEO
-MAIN --> TELEGRAM
-MAIN --> HUAWEI
-MAIN --> STATISTICS
-MAIN --> CLEAN
-MAIN --> MYSENSORS
-
-METEO --> CONFIG
-TELEGRAM --> CONFIG
-BASE --> CONFIG
-HUAWEI --> CONFIG
-
-CLEAN --> DATABASE 
-DATABASE --> BASE
-HUAWEI --> BASE
-MAIN --> BASE
-METEO --> BASE
-MYSENSORS --> DATABASE
-STATISTICS --> BASE 
-TELEGRAM --> BASE 
-
-@enduml
-```
+<img src="http://www.plantuml.com/plantuml/png/LL3DJiCm3BxdAQBTnoEWXH56fQsJbY34qNIcL4fJrAH2UtkqMZ7EBTzFxE_pBcMOyp86DMEN8VO1zMQ48Jxyt3OQaZwPfjMLY1adLgstPwbsK_mQ-YBlp-rBSv1wne3z36DnU7kqXuivIK_Aa8UKXouLb_F6DyutUoTztmlyub0yhs_ctJPLbe0GEShHchRgSKiOqpGdxlBXRElEbsh79oGiXYVZhDIka47gpyQRrQFMesstZtGVXjoMcPAwOD6KEOhEKEHKwtZoqANB0idT8qbCAoMZrWrtXZjeHI_wIjNv8s5EH8Yp4EIKrLZrtu-jcbCBIkqmNfSn_040">
 
 ### Configuration File
 
