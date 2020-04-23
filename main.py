@@ -122,7 +122,7 @@ class MainClass(BaseClass):
 
             # kisses for your Mississ
             elif command == "bisous":
-                self.__telegram.send_telegram_text(chat_id, r":\* :\* :\*")
+                self.__telegram.send_telegram_text(chat_id, r":* :* :*")
 
             # test message
             elif command == "test":
