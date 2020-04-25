@@ -1,11 +1,11 @@
-*Last update on 24/04/2020*
+*Last update on 25/04/2020*
 
-# Smart Home Installation
+# Data Server on Raspberry PI
 
-I will decribe on this page a simple Smart Home Installation which I have build for 
-my home. It is based principally on:
-- Raspberry PI
-- STM32 board 
+## Smart Home Installation
+
+I will decribe on this page a simple Smart Home Installation which I have build for my home. 
+
 
 ```plantuml
 @startuml
@@ -31,12 +31,12 @@ my home. It is based principally on:
 The installation is not limited on described modules and can be adapted for all particular uses.
 
 
-# Demonstration
+## Demonstration
 
 <img src="../images/img_doc_data_server_pi_demo.gif">
 
 
-# Source Code 
+## Source Code 
 
 Source code of this project: 
 

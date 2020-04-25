@@ -5,4 +5,4 @@ markdown_extensions:
     server: http://www.plantuml.com/plantuml
 
 nav:
-  - Make Data Server - Part 1: 'doc_data_server_pi.md'
+  - Data Server on Raspberry PI: 'doc_data_server_pi.md'
