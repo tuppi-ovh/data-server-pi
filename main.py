@@ -18,32 +18,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For information on Data Server PI: tuppi.ovh@gmail.com
 """
 
+import os
 import time
 import sys
+import importlib
 from base import BaseClass
 from telegram import TelegramClass
 from statistics import StatisticsClass
 from clean import CleanClass
 from mysensors import MySensorsClass
-from meteo import MeteoClass
 from huawei import HuaweiClass
+import config
 
+PLUGIN_FOLDER = "./plugins"
 
 
 class MainClass(BaseClass):
-    """
-    brief: Main class.
-
-    Available methods: 
-    - execute the command parse
+    """ Main class.
     """
 
     def __init__(self, database):
-        """
-        Constructor.
+        """ Constructor.
         """
         BaseClass.__init__(self, "main")
-        self.__meteo = MeteoClass("meteo")
         self.__telegram = TelegramClass("telegram")
         self.__huawei = HuaweiClass("huawei")
         if database != None:
@@ -54,11 +51,55 @@ class MainClass(BaseClass):
             self.__statistics = None
             self.__clean = None
             self.__mysensors = None
+        # plugins 
+        self.__list_plugins()
+        self.__load_plugins()
+        self.__configure_plugins(config)
         
 
-    def execute(self, argv):
+    def __handle_plugins(self, command):
+        """ Handles plugins. 
         """
-        Execute once.
+        retval = None
+        for plugin in self.__plugins:
+            result = plugin.handle(command)
+            if result != None:
+                retval = result
+                break
+        return retval
+
+
+    def __list_plugins(self):
+        """ Scans for all available plugins.
+        """
+        self.__plugins_info = []
+        possibleplugins = os.listdir(PLUGIN_FOLDER)
+        for i in possibleplugins:
+            location = os.path.join(PLUGIN_FOLDER, i)
+            if not os.path.isdir(location) or not "__init__.py" in os.listdir(location):
+                continue
+            #info = imp.find_module(MainModule, [location])
+            info = None
+            self.__plugins_info.append({"name": i, "info": info})
+
+
+    def __load_plugins(self):
+        """ Loads plugins.
+        """
+        self.__plugins = []
+        for plugin_info in self.__plugins_info:
+            self.__plugins.append(importlib.import_module("plugins." + plugin_info["name"] + ".__init__"))
+
+
+    def __configure_plugins(self, config):
+        """ Handles plugins. 
+        """
+        for plugin in self.__plugins:
+            plugin.configure(config)
+
+
+    def execute(self, argv):
+        """ Executes once.
         """
 
         if len(argv) == 4:
@@ -73,21 +114,10 @@ class MainClass(BaseClass):
             self.log_info("len=" + str(len(argv)) + " file=" + filename +
                         " db=" + db_filename + " cmd=" + command + " chat=" + str(chat_id))
 
-            # meteo for today 
-            if command == "meteo":
-                message = self.__meteo.get_meteo(0)
-                print("meteo: ", message)
-                self.__telegram.send_telegram_text(chat_id, message)
-
-            # meteo for tomorrow
-            elif command == "meteo.demain":
-                message = self.__meteo.get_meteo(1)
-                self.__telegram.send_telegram_text(chat_id, message)
-
-            # meteo for after tomorrow
-            elif command == "meteo.demain.apres":
-                message = self.__meteo.get_meteo(2)
-                self.__telegram.send_telegram_text(chat_id, message)
+            # handle command in each plugin
+            result = self.__handle_plugins(command)
+            if result != None:
+                self.__telegram.send_telegram_text(chat_id, result)
 
             # data usage statistics
             elif command == "huawei":
@@ -201,14 +231,13 @@ class MainClass(BaseClass):
 
 
 def main(argv):
-    """
-    Main function.
+    """ Main function.
     """
     mainc = MainClass(argv[1])
     mainc.execute(argv)
 
 
 # Usage: python3 main.py <database> <command> <chat_id>
-# Usage example: python3 .\github\data-server-pi\main.py .\MySensors.db auto -1  
+# Usage example: python3 .\main.py .\MySensors.db auto -1
 if __name__ == "__main__":
     main(sys.argv)

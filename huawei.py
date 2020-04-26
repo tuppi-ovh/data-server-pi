@@ -46,12 +46,13 @@ class HuaweiClass(BaseClass):
     def get_usage_gbytes(self):
         """
         """
-        connection = AuthorizedConnection(config.HUAWEI_URL)
-        stats = connection.get('monitoring/month_statistics')
-
-        usage = (int(stats["CurrentMonthDownload"]) + int(stats["CurrentMonthUpload"])) / 1024 / 1024 / 1024
-
-        return "{:.2f} GB".format(usage)        
+        try:
+            connection = AuthorizedConnection(config.HUAWEI_URL)
+            stats = connection.get('monitoring/month_statistics')
+            usage = (int(stats["CurrentMonthDownload"]) + int(stats["CurrentMonthUpload"])) / 1024 / 1024 / 1024
+            return "{:.2f} GB".format(usage)
+        except:
+            return "no access"
         
 
 def main(argv):
