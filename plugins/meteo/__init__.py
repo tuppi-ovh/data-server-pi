@@ -94,16 +94,16 @@ def __get_meteo(day):
 def handle(command):
     """ Handles telegram command.
     """
-    retval = None
+    retval = []
     # meteo for today 
     if command == "meteo":
-        retval = __get_meteo(0)
+        retval.append({"text": __get_meteo(0)})
     # meteo for tomorrow
     elif command == "meteo.demain":
-        retval = __get_meteo(1)
+        retval.append({"text": __get_meteo(1)})
     # meteo for after tomorrow
     elif command == "meteo.demain.apres":
-        retval = __get_meteo(2)
+        retval.append({"text": __get_meteo(2)})
     return retval
 
 

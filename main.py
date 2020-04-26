@@ -76,11 +76,10 @@ class MainClass(BaseClass):
         possibleplugins = os.listdir(PLUGIN_FOLDER)
         for i in possibleplugins:
             location = os.path.join(PLUGIN_FOLDER, i)
-            if not os.path.isdir(location) or not "__init__.py" in os.listdir(location):
-                continue
-            #info = imp.find_module(MainModule, [location])
-            info = None
-            self.__plugins_info.append({"name": i, "info": info})
+            if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in config.MAIN_PLUGINS):
+                #info = imp.find_module(MainModule, [location])
+                info = None
+                self.__plugins_info.append({"name": i, "info": info})
 
 
     def __load_plugins(self):
@@ -115,9 +114,13 @@ class MainClass(BaseClass):
                         " db=" + db_filename + " cmd=" + command + " chat=" + str(chat_id))
 
             # handle command in each plugin
-            result = self.__handle_plugins(command)
-            if result != None:
-                self.__telegram.send_telegram_text(chat_id, result)
+            responses = self.__handle_plugins(command)
+            if len(responses) > 0:
+                for r in responses:
+                    if "text" in r:
+                        self.__telegram.send_telegram_text(chat_id, r["text"])
+                    if "photo" in r:
+                        self.__telegram.send_telegram_photo(chat_id, r["photo"])
 
             # data usage statistics
             elif command == "huawei":
