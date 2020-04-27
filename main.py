@@ -30,6 +30,11 @@ from mysensors import MySensorsClass
 from huawei import HuaweiClass
 import config
 
+
+# constants
+COMMANDS = ({"command": "help", "description": ""},
+            {"command": "auto", "description": ""},
+
 PLUGIN_FOLDER = "./plugins"
 
 
@@ -73,10 +78,11 @@ class MainClass(BaseClass):
         """ Scans for all available plugins.
         """
         self.__plugins_info = []
-        possibleplugins = os.listdir(PLUGIN_FOLDER)
-        for i in possibleplugins:
+        possible_plugins = os.listdir(PLUGIN_FOLDER)
+        enabled_plugins = (config.MAIN_PLUGINS, "about")
+        for i in possible_plugins:
             location = os.path.join(PLUGIN_FOLDER, i)
-            if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in config.MAIN_PLUGINS):
+            if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in enabled_plugins):
                 #info = imp.find_module(MainModule, [location])
                 info = None
                 self.__plugins_info.append({"name": i, "info": info})
@@ -89,9 +95,22 @@ class MainClass(BaseClass):
         for plugin_info in self.__plugins_info:
             self.__plugins.append(importlib.import_module("plugins." + plugin_info["name"] + ".__init__"))
 
+    
+    def __get_commands_plugins(self):
+        """ Lists plugin commands.
+        """
+        text = "Available commands:\n"
+        for plugin in self.__plugins:
+            cmds = plugin.get_commands()
+            for c in cmds:
+                text = text + "  " + c["command"] + "\n"
+        for c in COMMANDS:
+            text = text + "  " + c["command"] + "\n"
+        return text
+
 
     def __configure_plugins(self, config):
-        """ Handles plugins. 
+        """ Configures plugins. 
         """
         for plugin in self.__plugins:
             plugin.configure(config)
@@ -122,11 +141,6 @@ class MainClass(BaseClass):
                     if "photo" in r:
                         self.__telegram.send_telegram_photo(chat_id, r["photo"])
 
-            # data usage statistics
-            elif command == "huawei":
-                message = self.__huawei.get_usage_gbytes()
-                self.__telegram.send_telegram_text(chat_id, message)
-
             # automatic clean of MySensors database
             elif command == "clean":
                 self.__clean.clean_auto()
@@ -153,53 +167,16 @@ class MainClass(BaseClass):
                 except:
                     self.__telegram.send_telegram_text(chat_id, "Erreur du parsing")
 
-            # kisses for your Mississ
-            elif command == "bisous":
-                self.__telegram.send_telegram_text(chat_id, r":* :* :*")
-
-            # test message
-            elif command == "test":
-                self.__telegram.send_telegram_text(chat_id, "La commande test a été bien reçue")
-
-            # not supported yet 
-            elif command == "local":
-                self.__telegram.send_telegram_text(chat_id, "La commande arrive bientôt")
+            # help
+            elif command == "help":
+                text = self.__get_commands_plugins()
+                self.__telegram.send_telegram_text(chat_id, text)
 
             # for internal use, not from telegram
             elif command == "mysensors-dont-call-from-telegram":
                 self.__mysensors.run()
 
-            # about program
-            elif command == "about":
-                text = (
-                    "Data Server PI - Copyright (C) 2020 - Vadim MUKHTAROV\n"
-                    "This program comes with ABSOLUTELY NO WARRANTY; for details send the command 'show-w'. "
-                    "This is free software, and you are welcome to redistribute it "
-                    "under certain conditions; send the command 'show-c' for details."
-                )
-                self.__telegram.send_telegram_text(chat_id, text)
-
-            # licence warranty
-            elif command == "show-w":
-                text = (
-                    "This program is distributed in the hope that it will be useful, "
-                    "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-                    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                    "GNU General Public License for more details."
-                )
-                self.__telegram.send_telegram_text(chat_id, text)
-
-            # licence redistribute
-            elif command == "show-c":
-                text = (
-                    " This program is free software: you can redistribute it and/or modify "
-                    "it under the terms of the GNU General Public License as published by "
-                    "the Free Software Foundation, either version 3 of the License, or "
-                    "(at your option) any later version."
-                )
-                self.__telegram.send_telegram_text(chat_id, text)
-
-            # recursive execution in automatic mode
+            # recursive execution in automatic mode, not from telegram
             elif command == "auto":
                 while True:
                     commands = self.__telegram.recv_telegram_commands()
@@ -211,23 +188,12 @@ class MainClass(BaseClass):
 
             # unknown command
             else:
-                self.log_error("unknown command")
                 # help message
-                message = ""
-                message = message + "Liste des commandes disponibles :\n"
-                message = message + "  meteo\n"
-                message = message + "  meteo.demain\n"
-                message = message + "  meteo.demain.apres\n"
-                message = message + "  bisous\n"
-                message = message + "  test\n"
-                message = message + "  stats.temper.<duration>\n"
-                message = message + "  stats.hum.<duration>\n"
-                message = message + "  clean\n"
-                message = message + "  clean.id.<num>\n"
-                message = message + "  about\n"
-                message = message + "  show-w\n"
-                message = message + "  show-c\n"
-                self.__telegram.send_telegram_text(chat_id, message)
+                text = "\"" + command + "\" is unknown command. \n"
+                text = text + self.__get_commands_plugins()
+                self.__telegram.send_telegram_text(chat_id, text)
+                # log
+                self.log_error(text)
 
         else:
             self.log_error("incorrect number of args")

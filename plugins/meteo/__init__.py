@@ -23,17 +23,24 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 
 import sys
 import requests
+import collections
 from bs4 import BeautifulSoup
-import config
 
-url = None
+
+# constants
+COMMANDS = ({"command": "meteo", "description": ""},
+            {"command": "meteo.demain", "description": ""},
+            {"command": "meteo.demain.apres", "description": ""})
+
+# config
+config_url = None
 
 
 def __get_meteo(day):
     """ Parses the meteo site to get interesting information.
     """
     # get pages
-    r_15d = requests.get(url)
+    r_15d = requests.get(config_url)
 
     # parse
     soup_15d = BeautifulSoup(r_15d.text, features="html.parser")
@@ -104,24 +111,40 @@ def handle(command):
     # meteo for after tomorrow
     elif command == "meteo.demain.apres":
         retval.append({"text": __get_meteo(2)})
+    # unknown command
+    else:
+        pass
+    # return 
     return retval
+
+
+def get_commands():
+    """ Returns a list of all supporteed commands.
+    """
+    return COMMANDS
 
 
 def configure(config):
     """ Configures the plugin regarding configuration file.
     """
-    global url
-    url = config.METEO_URL
+    global config_url
+    config_url = config.METEO_URL
 
 
 def main(argv):
     """ Main function."""
-    # parse
-    message = __get_meteo(int(argv[1]))
+    # config
+    config = collections.namedtuple('config', ['METEO_URL'])
+    config.METEO_URL = argv[2]
+    configure(config)
+    # handle
+    msg = handle(argv[1])
     # print 
-    print(message)
+    if len(msg) > 0:
+        print(msg[0]["text"])
 
 
-# Usage: python3 meteo.py <day_index> 
+# Usage: python3 __init__.py <command> <config_url>
+# Usage example: python3 .\plugins\meteo\__init__.py meteo.demain <config_url>
 if __name__ == "__main__":
     main(sys.argv)

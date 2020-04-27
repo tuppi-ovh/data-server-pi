@@ -20,15 +20,13 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 
 import sys
 import sqlite3
-from base import BaseClass
 
 
-class DataBaseClass(BaseClass):
+class DataBaseClass(object):
     """Database management class."""
 
-    def __init__(self, name, db_filename):
+    def __init__(self, db_filename):
         """ Constructor."""
-        BaseClass.__init__(self, name)
         self.__db = sqlite3.connect(db_filename)
         self.__query_curs = self.__db.cursor()
 
@@ -92,7 +90,7 @@ class DataBaseClass(BaseClass):
 def main(argv):
     """ Main function."""
     # handler object
-    base = DataBaseClass("database", argv[1])
+    __ = DataBaseClass(argv[1])
 
 
 # Usage: python3 telegram.py <database> 
