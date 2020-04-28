@@ -1,2 +1,5 @@
 __pycache__/
+www/
 config.py
+*.db
+*.png
