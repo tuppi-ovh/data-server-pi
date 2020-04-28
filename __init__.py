@@ -51,10 +51,10 @@ class MainClass(object):
     def __handle_plugins(self, command):
         """ Handles plugins. 
         """
-        retval = None
+        retval = []
         for plugin in self.__plugins:
             result = plugin.handle(command)
-            if result != None:
+            if len(result) > 0:
                 retval = result
                 break
         return retval
