@@ -139,8 +139,8 @@ class MainClass(object):
                 while True:
                     commands = self.__telegram.recv_telegram_commands()
                     for cmd in commands:
-                        argv[2] = cmd["command"]
-                        argv[3] = str(cmd["chat_id"])
+                        argv[1] = cmd["command"]
+                        argv[2] = str(cmd["chat_id"])
                         self.execute(argv)
                     time.sleep(1)
 
