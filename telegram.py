@@ -86,8 +86,8 @@ class TelegramClass(object):
                 # json
                 updates = json.loads(response.content.decode("utf8"))
                 # log for debug
-                self.log_info("json ok")
-                self.log_info("offset=" + str(self.__updates_offset) +
+                print("json ok")
+                print("offset=" + str(self.__updates_offset) +
                               " updates_nb=" + str(len(updates["result"])))
                 # handle updates
                 if updates["ok"] and len(updates["result"]) > 0:
@@ -110,7 +110,7 @@ class TelegramClass(object):
                             command["command"] = text
                             commands.append(command)
                             # log
-                            self.log_info("recv command=" + text + " chatid=" + str(chat_id))
+                            print("recv command=" + text + " chatid=" + str(chat_id))
 
         return commands
 
