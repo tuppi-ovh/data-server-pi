@@ -23,7 +23,7 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import time
 import sys
 from datetime import datetime
-from database import DataBaseClass
+from .database import DataBaseClass
 from .daemon import MySensorsClass
 
 

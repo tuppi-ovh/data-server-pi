@@ -67,7 +67,7 @@ Create a file `/lib/systemd/system/data-server-pi-telegram.service` with this co
 
 ```ini
 [Unit]
-Description=MySensors Telegram Service
+Description=Data Server Telegram Service
 After=multi-user.target
 Conflicts=getty@tty1.service
 
@@ -95,7 +95,7 @@ Create a file `/lib/systemd/system/data-server-pi-mysensors.service` with this c
 
 ```ini
 [Unit]
-Description=MySensors Main Service
+Description=Data Server MySensors Daemon
 After=multi-user.target
 Conflicts=getty@tty1.service
 
@@ -119,11 +119,11 @@ sudo systemctl status data-server-pi-mysensors.service
 
 ### HTTP Server
 
-Create a file `/lib/systemd/system/data-server-linux-httpd.service` with this content:
+Create a file `/lib/systemd/system/data-server-pi-httpd.service` with this content:
 
 ```ini
 [Unit]
-Description=MySensors HTTP Server
+Description=Data Server HTTP Daemon
 After=multi-user.target
 Conflicts=getty@tty1.service
 

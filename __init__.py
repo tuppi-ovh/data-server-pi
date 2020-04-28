@@ -92,7 +92,6 @@ class MainClass(object):
         text = "Available commands:\n"
         for plugin in self.__plugins:
             cmds = plugin.get_commands()
-            print(cmds)
             for c in cmds:
                 text = text + "  " + c["command"] + "\n"
         for c in COMMANDS:
@@ -111,17 +110,15 @@ class MainClass(object):
         """ Executes once.
         """
 
-        if len(argv) == 4:
+        if len(argv) == 3:
 
             # convert sys argv to normal variables
             filename = argv[0]
-            db_filename = argv[1]
-            command = argv[2]
-            chat_id = int(argv[3])
+            command = argv[1]
+            chat_id = int(argv[2])
 
             # log
-            print("len=" + str(len(argv)) + " file=" + filename +
-                        " db=" + db_filename + " cmd=" + command + " chat=" + str(chat_id))
+            print("len=" + str(len(argv)) + " file=" + filename + " cmd=" + command + " chat=" + str(chat_id))
 
             # handle command in each plugin
             responses = self.__handle_plugins(command)
