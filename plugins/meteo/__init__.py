@@ -28,9 +28,9 @@ from bs4 import BeautifulSoup
 
 
 # constants
-COMMANDS = ({"command": "meteo", "description": ""},
+COMMANDS = [{"command": "meteo", "description": ""},
             {"command": "meteo.demain", "description": ""},
-            {"command": "meteo.demain.apres", "description": ""})
+            {"command": "meteo.demain.apres", "description": ""}]
 
 # config
 config_url = None

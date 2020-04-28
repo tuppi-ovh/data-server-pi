@@ -23,9 +23,9 @@ import sys
 
 
 # constants
-COMMANDS = ({"command": "about", "description": ""},
+COMMANDS = [{"command": "about", "description": ""},
             {"command": "show-w", "description": ""},
-            {"command": "show-c", "description": ""})
+            {"command": "show-c", "description": ""}]
 
 
 def handle(command):

@@ -24,7 +24,7 @@ import serial
 import collections
 from threading import Thread
 from datetime import datetime
-from database import DataBaseClass
+from .database import DataBaseClass
 
 
 

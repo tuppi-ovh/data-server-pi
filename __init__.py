@@ -22,40 +22,26 @@ import os
 import time
 import sys
 import importlib
-from base import BaseClass
-from telegram import TelegramClass
-from statistics import StatisticsClass
-from clean import CleanClass
-from mysensors import MySensorsClass
-from huawei import HuaweiClass
 import config
+from telegram import TelegramClass
 
 
 # constants
 COMMANDS = ({"command": "help", "description": ""},
-            {"command": "auto", "description": ""},
+            {"command": "auto", "description": ""})
 
 PLUGIN_FOLDER = "./plugins"
 
 
-class MainClass(BaseClass):
+
+class MainClass(object):
     """ Main class.
     """
 
-    def __init__(self, database):
+    def __init__(self):
         """ Constructor.
         """
-        BaseClass.__init__(self, "main")
-        self.__telegram = TelegramClass("telegram")
-        self.__huawei = HuaweiClass("huawei")
-        if database != None:
-            self.__statistics = StatisticsClass("statistics", database)
-            self.__clean = CleanClass("clean", database)
-            self.__mysensors = MySensorsClass("mysensors", database)
-        else:
-            self.__statistics = None
-            self.__clean = None
-            self.__mysensors = None
+        self.__telegram = TelegramClass()
         # plugins 
         self.__list_plugins()
         self.__load_plugins()
@@ -79,7 +65,11 @@ class MainClass(BaseClass):
         """
         self.__plugins_info = []
         possible_plugins = os.listdir(PLUGIN_FOLDER)
-        enabled_plugins = (config.MAIN_PLUGINS, "about")
+        enabled_plugins = config.MAIN_PLUGINS
+        if "about" in enabled_plugins:
+            pass
+        else:
+            enabled_plugins.append("about")
         for i in possible_plugins:
             location = os.path.join(PLUGIN_FOLDER, i)
             if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in enabled_plugins):
@@ -102,6 +92,7 @@ class MainClass(BaseClass):
         text = "Available commands:\n"
         for plugin in self.__plugins:
             cmds = plugin.get_commands()
+            print(cmds)
             for c in cmds:
                 text = text + "  " + c["command"] + "\n"
         for c in COMMANDS:
@@ -129,7 +120,7 @@ class MainClass(BaseClass):
             chat_id = int(argv[3])
 
             # log
-            self.log_info("len=" + str(len(argv)) + " file=" + filename +
+            print("len=" + str(len(argv)) + " file=" + filename +
                         " db=" + db_filename + " cmd=" + command + " chat=" + str(chat_id))
 
             # handle command in each plugin
@@ -141,40 +132,10 @@ class MainClass(BaseClass):
                     if "photo" in r:
                         self.__telegram.send_telegram_photo(chat_id, r["photo"])
 
-            # automatic clean of MySensors database
-            elif command == "clean":
-                self.__clean.clean_auto()
-                self.__telegram.send_telegram_text(chat_id, "Les stats ont été netoyés")
-
-            # clean MySensors database by the entry ID
-            elif command.find("clean.id.") != -1:
-                try:
-                    __, ___, ident = command.split(".")
-                    clean.clean_by_id(int(ident))
-                    telegram.send_telegram_text(chat_id, "Element supprimé : " + ident)
-                except:
-                    self.__telegram.send_telegram_text(chat_id, "Erreur du parsing")
-
-            # Temperature & Humidity Statistics
-            elif command.find("stats.") != -1:
-                try:
-                    __, temp_hum, duration = command.split(".")
-                    if temp_hum == "temper":
-                        filename = self.__statistics.update_temperature(duration)
-                    else:
-                        filename = self.__statistics.update_humidity(duration)
-                    self.__telegram.send_telegram_photo(chat_id, filename)
-                except:
-                    self.__telegram.send_telegram_text(chat_id, "Erreur du parsing")
-
             # help
             elif command == "help":
                 text = self.__get_commands_plugins()
                 self.__telegram.send_telegram_text(chat_id, text)
-
-            # for internal use, not from telegram
-            elif command == "mysensors-dont-call-from-telegram":
-                self.__mysensors.run()
 
             # recursive execution in automatic mode, not from telegram
             elif command == "auto":
@@ -193,20 +154,20 @@ class MainClass(BaseClass):
                 text = text + self.__get_commands_plugins()
                 self.__telegram.send_telegram_text(chat_id, text)
                 # log
-                self.log_error(text)
+                print(text)
 
         else:
-            self.log_error("incorrect number of args")
+            print("incorrect number of args")
 
 
 def main(argv):
     """ Main function.
     """
-    mainc = MainClass(argv[1])
+    mainc = MainClass()
     mainc.execute(argv)
 
 
-# Usage: python3 main.py <database> <command> <chat_id>
-# Usage example: python3 .\main.py .\MySensors.db auto -1
+# Usage: python3 main.py <command> <chat_id>
+# Usage example: python3 .\main.py auto -1
 if __name__ == "__main__":
     main(sys.argv)

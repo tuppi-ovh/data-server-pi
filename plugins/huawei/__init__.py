@@ -28,7 +28,7 @@ from huawei_lte_api.Connection import Connection
 
 
 # constants
-COMMANDS = ({"command": "huawei", "description": ""})
+COMMANDS = [{"command": "huawei", "description": ""}]
 
 # config
 config_url = None

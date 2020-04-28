@@ -22,7 +22,6 @@ import sys
 import json
 import requests
 import config
-from base import BaseClass
 
 TIMEOUT_TELEGRAM = 60 * 2
 TIMEOUT_REQUESTS = TIMEOUT_TELEGRAM + 30
@@ -31,10 +30,9 @@ TIMEOUT_REQUESTS = TIMEOUT_TELEGRAM + 30
 URL = "https://api.telegram.org/bot" + config.TELEGRAM_BOT_TOKEN
 
 
-class TelegramClass(BaseClass):
+class TelegramClass(object):
 
-    def __init__(self, name):
-        BaseClass.__init__(self, name)
+    def __init__(self):
         self.__updates_offset = 0
         self.__counter_send = 0
 
@@ -68,19 +66,19 @@ class TelegramClass(BaseClass):
         url_custom = URL + "/getUpdates?timeout=" + \
             str(TIMEOUT_TELEGRAM) + "&offset=" + str(self.__updates_offset)
         # log for debug
-        self.log_info("url=" + url_custom)
+        print("url=" + url_custom)
 
         # url request
         try:
             response = requests.get(url_custom, timeout=TIMEOUT_REQUESTS)
             # log for debug
-            self.log_info("requests get ok (status_code=" + str(response.status_code) + ")")
+            print("requests get ok (status_code=" + str(response.status_code) + ")")
 
         # exceptions
         except requests.exceptions.Timeout as error:
-            self.log_error("requests get exception: " + str(error))
+            print("requests get exception: " + str(error))
         except:
-            self.log_error("requests get exception")
+            print("requests get exception")
 
         # continue if succeeded
         else:

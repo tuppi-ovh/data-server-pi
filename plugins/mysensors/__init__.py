@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# it is required for french characters
-
 """
 Data Server PI - high level application for the Smart Home data acquisition.
 Copyright (C) 2020 Vadim MUKHTAROV
@@ -24,12 +21,17 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import sys
 import requests
 import collections
-from bs4 import BeautifulSoup
-from daemon import MySensorsClass
+from .daemon import MySensorsClass
+from .clean import CleanClass
+from .statistics import StatisticsClass
 
 
 # constants
-COMMANDS = ({"command": "mysensors-dont-call-from-telegram", "description": ""})
+COMMANDS = [{"command": "mysensors-dont-call-from-telegram", "description": ""},
+            {"command": "clean.auto", "description": ""},
+            {"command": "clean.id.<id>", "description": ""},
+            {"command": "stats.temper.<duration>", "description": ""},
+            {"command": "stats.hum.<duration>", "description": ""}]
 
 
 # config
@@ -45,9 +47,40 @@ def handle(command):
     if command == "mysensors-dont-call-from-telegram":
         mysensors = MySensorsClass(config_serial_port, config_database)
         mysensors.run() # stay here forever
+
+    # automatic clean of MySensors database
+    elif command == "clean.auto":
+        clean = CleanClass(config_database)
+        clean.clean_auto()
+        text = "done"
+        retval.append({"text": text})
+
+    # clean MySensors database by the entry ID
+    elif command.find("clean.id.") != -1:
+        __, ___, ident = command.split(".")
+        clean = CleanClass(config_database)
+        clean.clean_by_id(int(ident))
+        text = "Element ID=" + ident + " is deleted"
+        retval.append({"text": text})
+
+    # Temperature Statistics
+    elif command.find("stats.temper") != -1:
+        __, ___, duration = command.split(".")
+        statistics = StatisticsClass(config_database)
+        filename = statistics.update_temperature(duration)
+        retval.append({"photo": filename})
+
+    # Humidity Statistics
+    elif command.find("stats.hum") != -1:
+        __, ___, duration = command.split(".")
+        statistics = StatisticsClass(config_database)
+        filename = statistics.update_humidity(duration)
+        retval.append({"photo": filename})
+
     # unknown command
     else:
         pass
+    
     # return 
     return retval
 
@@ -66,8 +99,10 @@ def configure(config):
     config_database = config.MYSENSORS_DATABASE_FILENAME
     config_serial_port = config.MYSENSORS_SERIAL_PORT
 
+
 def main(argv):
-    """ Main function."""
+    """ Main function for standalone execution.
+    """
     # config
     config = collections.namedtuple('config', ['MYSENSORS_DATABASE_FILENAME', 'MYSENSORS_SERIAL_PORT'])
     config.MYSENSORS_DATABASE_FILENAME = argv[2]

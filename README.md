@@ -3,11 +3,6 @@
 Data Server STM32 is a high level application for the Smart Home data acquisition. 
 This project should be run on Raspberry PI board.
 
-# Related Projects
-
-For hardware description refer to https://tuppi.ovh/data_server_stm32/doc_data_server.
-
-For low level application refer to https://github.com/tuppi-ovh/data-server-stm32. 
 
 # Python Project
 
@@ -31,25 +26,16 @@ python3 -m pip install numpy
 sudo apt-get install libatlas-base-dev
 ```
 
-### Project Files
-
-<img src="http://www.plantuml.com/plantuml/png/LL3DJiCm3BxdAQBTnoEWXH56fQsJbY34qNIcL4fJrAH2UtkqMZ7EBTzFxE_pBcMOyp86DMEN8VO1zMQ48Jxyt3OQaZwPfjMLY1adLgstPwbsK_mQ-YBlp-rBSv1wne3z36DnU7kqXuivIK_Aa8UKXouLb_F6DyutUoTztmlyub0yhs_ctJPLbe0GEShHchRgSKiOqpGdxlBXRElEbsh79oGiXYVZhDIka47gpyQRrQFMesstZtGVXjoMcPAwOD6KEOhEKEHKwtZoqANB0idT8qbCAoMZrWrtXZjeHI_wIjNv8s5EH8Yp4EIKrLZrtu-jcbCBIkqmNfSn_040">
-
-### Class Inheritance
-
-<img src="http://www.plantuml.com/plantuml/png/SoWkIImgAStDuN99B4bqIYnETSv9B2vMiAdHrLLmpabDp0FpkT1aO8gnIdgK9fQdPcALyatCpCCkaLgIcW_cOtE8RsLmQbvnVb4nLht19OabcSKbcSdOfKDISrBJYn9p8P8EgNafGEy20000">
-
-
 ### Configuration File
 
 It is necessary to add some configuration data to `config.py` file:
 
 ```py
-# Log enabled flag
-BASE_LOG_FILE_ENABLED = False
+# Absolut path to MySensors database
+MYSENSORS_DATABASE_FILENAME = "/absolut/path/to/database/MySensors.db"
 
-# Local file for logs (here in RAM FS)
-BASE_LOG_FILENAME = "/run/log/data-server-pi.log"
+# MySensors COM port
+MYSENSORS_SERIAL_PORT = "/dev/ttyUSB0"
 
 # Telegram Bot token 
 TELEGRAM_BOT_TOKEN = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -62,6 +48,9 @@ HUAWEI_URL = "http://admin:admin@192.168.0.1/"
 
 # URL to prefered meteo site 
 METEO_URL = "http://xxxxxxxxxxxxxxxx.com"
+
+# Enabled plugins (about is forced to be enabled)
+MAIN_PLUGINS = ["meteo", "mysensors", "huawei", "mysensors"]
 ```
 
 # Systemd Services
@@ -84,7 +73,7 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /absulut/path/to/the/project/main.py /absulut/path/to/the/project/MySensors.db auto -1
+ExecStart=/usr/bin/python3 /absulut/path/to/the/project/__init__.py auto -1
 StandardInput=tty-force
 
 [Install]
@@ -112,7 +101,7 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /absulut/path/to/the/project/main.py /absulut/path/to/the/project/MySensors.db mysensors-dont-call-from-telegram -1
+ExecStart=/usr/bin/python3 /absulut/path/to/the/project/__init__.py mysensors-dont-call-from-telegram -1
 StandardInput=tty-force
 
 [Install]
@@ -155,6 +144,14 @@ sudo systemctl enable data-server-pi-httpd.service
 sudo systemctl start data-server-pi-httpd.service
 sudo systemctl status data-server-pi-httpd.service
 ```
+
+
+# References
+
+- Hardware description: https://tuppi.ovh/data_server_stm32/doc_data_server.
+- Low level application (STM32): https://github.com/tuppi-ovh/data-server-stm32. 
+- Web page of this project: https://tuppi.ovh/data_server_pi/doc_data_server_pi.
+
 
 # License
 
