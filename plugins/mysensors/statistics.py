@@ -27,8 +27,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pandas.plotting import register_matplotlib_converters
-from database import DataBaseClass
-from mysensors import MySensorsClass
+from .database import DataBaseClass
+from .daemon import MySensorsClass
 
 
 # graph colors
@@ -59,9 +59,9 @@ class ExecClass():
 
 
 class StatisticsClass(DataBaseClass):
-    def __init__(self, name, db_filename):
+    def __init__(self, db_filename):
         """ Constructor."""
-        DataBaseClass.__init__(self, name, db_filename)
+        DataBaseClass.__init__(self, db_filename)
 
     def __timestamp_begin_calc(self, ts_now, duration_str):
         """ Returns timestamp begin for the selected type of output (1d, 1m, 1y)."""
@@ -177,7 +177,7 @@ def main(argv):
     # check args
     if len(argv) >= 2:
         # handler object
-        statistics = StatisticsClass("statistics", argv[1])
+        statistics = StatisticsClass(argv[1])
         # execute all
         statistics.update_temperature("0")
         statistics.update_temperature("1d")

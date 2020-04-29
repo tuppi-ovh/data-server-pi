@@ -23,15 +23,15 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import time
 import sys
 from datetime import datetime
-from database import DataBaseClass
-from mysensors import MySensorsClass
+from .database import DataBaseClass
+from .daemon import MySensorsClass
 
 
 class CleanClass(DataBaseClass):
     """Clean database class."""
 
-    def __init__(self, name, db_filename):
-        DataBaseClass.__init__(self, name, db_filename)
+    def __init__(self, db_filename):
+        DataBaseClass.__init__(self, db_filename)
 
     def clean_by_id(self, ident):
         """
@@ -40,17 +40,17 @@ class CleanClass(DataBaseClass):
         """
         self._database_delete_entry_by_id(ident)
         self._database_commit()
-        self.log_info("Database element deleted id=" + str(ident))
+        print("Database element deleted id=" + str(ident))
 
     def clean_debug(self):
         self._database_delete_entry_by_node_id(MySensorsClass.MYSENSORS_NODE_ID_DEBUG)
         self._database_commit()
-        self.log_info("Debug elements deleted")
+        print("Debug elements deleted")
 
     def clean_vacuum(self):
         self._database_vacuum()
         self._database_commit()
-        self.log_info("Compacted database")
+        print("Compacted database")
 
     def clean_keep_peaks(self, period_str, place_str, var_str):
         # period
@@ -100,7 +100,7 @@ class CleanClass(DataBaseClass):
                     counter = counter + 1
         self._database_commit()
         # log
-        self.log_info("Keep peaks from " + str(timestamp_very_begin) + " to " + str(timestamp_very_end) +
+        print("Keep peaks from " + str(timestamp_very_begin) + " to " + str(timestamp_very_end) +
               ", " + place_str + ", " + var_str + ": deleted " + str(counter) + " elements")
 
     def clean_auto(self):
@@ -119,19 +119,19 @@ class CleanClass(DataBaseClass):
 def main(argv):
     """Main function with arguments."""
     if len(argv) == 4 and argv[2] == "--id":
-        clean = CleanClass("clean", argv[1])
+        clean = CleanClass(argv[1])
         clean.clean_by_id(int(sys.argv[3]))
     elif len(argv) == 3 and argv[2] == "--debug":
-        clean = CleanClass("clean", argv[1])
+        clean = CleanClass(argv[1])
         clean.clean_debug()
     elif len(argv) == 3 and argv[2] == "--vacuum":
-        clean = CleanClass("clean", argv[1])
+        clean = CleanClass(argv[1])
         clean.clean_vacuum()
     elif len(argv) == 6 and argv[2] == "--peak":
-        clean = CleanClass("clean", argv[1])
+        clean = CleanClass(argv[1])
         clean.clean_keep_peaks(argv[3], argv[4], argv[5])
     elif len(argv) == 3 and argv[2] == "--auto":
-        clean = CleanClass("clean", argv[1])
+        clean = CleanClass(argv[1])
         clean.clean_auto()
     else:
         print("usage:")

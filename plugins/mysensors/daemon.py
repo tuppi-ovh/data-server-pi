@@ -21,14 +21,10 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import time
 import sys
 import serial
+import collections
 from threading import Thread
 from datetime import datetime
-from database import DataBaseClass
-
-
-# execution parameters
-LOCAL_EXEC = False
-DEV_TTY = "/dev/ttyUSB0"
+from .database import DataBaseClass
 
 
 
@@ -38,6 +34,8 @@ class ThreadSerialRecv(Thread):
     def __init__(self, port, commands, logs):
         Thread.__init__(self)
         self.__port = port
+        if port != None:
+            self.__serial = serial.Serial(port, baudrate=115200, timeout=1.0)
         self.__commands = commands
         self.__logs = logs
         self.__buffer = ""
@@ -48,11 +46,11 @@ class ThreadSerialRecv(Thread):
         while True:
 
             # concatenate to buffer
-            if LOCAL_EXEC == True:
+            if self.__port == None:
                 self.__buffer += "1000;1;1;0;1;69.9\n1000;0;1;0;0;27.5\n"
                 time.sleep(10)
             else:
-                byt = self.__port.read(256)
+                byt = self.__serial.read(256)
                 string = byt.decode('ascii')
                 self.__buffer += string
 
@@ -101,22 +99,17 @@ class MySensorsClass(DataBaseClass):
     MYSENSORS_TYPE_SET_TEXT = 47
     MYSENSORS_TYPE_SET_CUSTOM = 48
 
-    def __init__(self, name, db_filename):
+    def __init__(self, port, db_filename):
         """ Constructor."""
-        DataBaseClass.__init__(self, name, db_filename)
+        self.__port = port
+        DataBaseClass.__init__(self, db_filename)
 
     def run(self):
         commands = []
         logs = []
 
-        # serial port
-        if LOCAL_EXEC:
-            port = ""
-        else:
-            port = serial.Serial(DEV_TTY, baudrate=115200, timeout=1.0)
-
         # thread for UART data receive 
-        thread_recv = ThreadSerialRecv(port, commands, logs)
+        thread_recv = ThreadSerialRecv(self.__port, commands, logs)
         # daemon mode for CTRL-C exits
         thread_recv.daemon = True
         # threads start
@@ -133,7 +126,7 @@ class MySensorsClass(DataBaseClass):
                 element = logs[length - i - 1]
                 del logs[length - i - 1]
                 # log
-                self.log_info(element)
+                print(element)
 
             # number of commands
             length = len(commands)
@@ -158,14 +151,3 @@ class MySensorsClass(DataBaseClass):
             # sleep
             time.sleep(1)
 
-
-# script execution
-def main(argv):
-    """Main function with arguments."""
-    mysensors = MySensorsClass("mysensors", argv[1])
-    mysensors.run()
-
-
-# Execution: sudo python3 mysensors.py <database>
-if __name__ == "__main__":
-    main(sys.argv)
