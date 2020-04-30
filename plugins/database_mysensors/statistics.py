@@ -33,18 +33,18 @@ from .daemon import MySensorsClass
 
 # graph colors
 colorlist = {}
-colorlist[MySensorsClass.MYSENSORS_NODE_ID_LOCAL] = 'red'
-colorlist[MySensorsClass.MYSENSORS_NODE_ID_EXT] = 'blue'
+colorlist[DataBaseClass.NODE_ID_LOCAL] = 'red'
+colorlist[DataBaseClass.NODE_ID_EXT] = 'blue'
 
 # node name list
 nodenamelist = {}
-nodenamelist[MySensorsClass.MYSENSORS_NODE_ID_LOCAL] = 'local'
-nodenamelist[MySensorsClass.MYSENSORS_NODE_ID_EXT] = 'ext'
+nodenamelist[DataBaseClass.NODE_ID_LOCAL] = 'local'
+nodenamelist[DataBaseClass.NODE_ID_EXT] = 'ext'
 
 # child name list
 childnamelist = {}
-childnamelist[MySensorsClass.MYSENSORS_CHILD_ID_TEMP] = 'temper'
-childnamelist[MySensorsClass.MYSENSORS_CHILD_ID_HUM] = 'hum'
+childnamelist[DataBaseClass.CHILD_ID_TEMP] = 'temper'
+childnamelist[DataBaseClass.CHILD_ID_HUM] = 'hum'
 
 
 class ExecClass():
@@ -85,16 +85,16 @@ class StatisticsClass(DataBaseClass):
 
     def update_temperature(self, duration_str):
         """ Updates last value temperature. """
-        nodelist = {MySensorsClass.MYSENSORS_NODE_ID_LOCAL, MySensorsClass.MYSENSORS_NODE_ID_EXT}
-        exec = ExecClass(nodelist, MySensorsClass.MYSENSORS_CHILD_ID_TEMP, 
-                        MySensorsClass.MYSENSORS_TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
+        nodelist = {DataBaseClass.NODE_ID_LOCAL, DataBaseClass.NODE_ID_EXT}
+        exec = ExecClass(nodelist, DataBaseClass.CHILD_ID_TEMP, 
+                        DataBaseClass.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
         return self.update(exec)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
-        nodelist = {MySensorsClass.MYSENSORS_NODE_ID_LOCAL, MySensorsClass.MYSENSORS_NODE_ID_EXT}
-        exec = ExecClass(nodelist, MySensorsClass.MYSENSORS_CHILD_ID_HUM, 
-                        MySensorsClass.MYSENSORS_TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
+        nodelist = {DataBaseClass.NODE_ID_LOCAL, DataBaseClass.NODE_ID_EXT}
+        exec = ExecClass(nodelist, DataBaseClass.CHILD_ID_HUM, 
+                        DataBaseClass.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
         return self.update(exec)
 
     def update(self, exec_value):

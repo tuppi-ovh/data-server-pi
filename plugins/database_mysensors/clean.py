@@ -43,7 +43,7 @@ class CleanClass(DataBaseClass):
         print("Database element deleted id=" + str(ident))
 
     def clean_debug(self):
-        self._database_delete_entry_by_node_id(MySensorsClass.MYSENSORS_NODE_ID_DEBUG)
+        self._database_delete_entry_by_node_id(DataBaseClass.NODE_ID_DEBUG)
         self._database_commit()
         print("Debug elements deleted")
 
@@ -68,16 +68,16 @@ class CleanClass(DataBaseClass):
             step = 60 * 60
         # place
         if place_str == "local":
-            node_id = MySensorsClass.MYSENSORS_NODE_ID_LOCAL
+            node_id = DataBaseClass.NODE_ID_LOCAL
         elif place_str == "ext":
-            node_id = MySensorsClass.MYSENSORS_NODE_ID_EXT
+            node_id = DataBaseClass.NODE_ID_EXT
         # variable
         if var_str == "temp":
-            child_id = MySensorsClass.MYSENSORS_CHILD_ID_TEMP
-            type_set = MySensorsClass.MYSENSORS_TYPE_SET_TEMP
+            child_id = DataBaseClass.CHILD_ID_TEMP
+            type_set = DataBaseClass.TYPE_SET_TEMP
         elif var_str == "hum":
-            child_id = MySensorsClass.MYSENSORS_CHILD_ID_HUM
-            type_set = MySensorsClass.MYSENSORS_TYPE_SET_HUM
+            child_id = DataBaseClass.CHILD_ID_HUM
+            type_set = DataBaseClass.TYPE_SET_HUM
         # loop
         counter = 0
         for i in range(i_begin, i_end):

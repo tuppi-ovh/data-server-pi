@@ -74,31 +74,6 @@ class ThreadSerialRecv(Thread):
 class MySensorsClass(DataBaseClass):
     """MySensors class."""
 
-    # node id
-    MYSENSORS_NODE_ID_LOCAL = 100
-    MYSENSORS_NODE_ID_EXT = 103
-    MYSENSORS_NODE_ID_DEBUG = 133
-    # child id
-    MYSENSORS_CHILD_ID_TEMP = 0
-    MYSENSORS_CHILD_ID_HUM = 1
-    MYSENSORS_CHILD_ID_DEBUG = 33
-    # cmd
-    MYSENSORS_CMD_PRESENTATION = 0
-    MYSENSORS_CMD_SET = 1
-    # ack
-    MYSENSORS_ACK_NONE = 0
-    # type pres
-    MYSENSORS_TYPE_PRES_TEMP = 6
-    MYSENSORS_TYPE_PRES_HUM = 7
-    MYSENSORS_TYPE_PRES_CUSTOM = 23
-    MYSENSORS_TYPE_PRES_INFO = 36
-    # type set
-    MYSENSORS_TYPE_SET_TEMP = 0
-    MYSENSORS_TYPE_SET_HUM = 1
-    MYSENSORS_TYPE_SET_VAR1 = 24
-    MYSENSORS_TYPE_SET_TEXT = 47
-    MYSENSORS_TYPE_SET_CUSTOM = 48
-
     def __init__(self, port, db_filename):
         """ Constructor."""
         self.__port = port

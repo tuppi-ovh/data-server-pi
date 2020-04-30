@@ -62,14 +62,14 @@ class MainClass(object):
         """ Scans for all available plugins.
         """
         self.__plugins_info = []
-        possible_plugins = os.listdir(config.MAIN_PLUGINS_FOLDER)
+        possible_plugins = os.listdir(config.MAIN_PLUGINS_PATH)
         enabled_plugins = config.MAIN_PLUGINS
         if "about" in enabled_plugins:
             pass
         else:
             enabled_plugins.append("about")
         for i in possible_plugins:
-            location = os.path.join(config.MAIN_PLUGINS_FOLDER, i)
+            location = os.path.join(config.MAIN_PLUGINS_PATH, i)
             if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in enabled_plugins):
                 #info = imp.find_module(MainModule, [location])
                 info = None

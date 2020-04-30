@@ -21,17 +21,22 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import sys
 import requests
 import collections
-from .daemon import MySensorsClass
+from .mysensors import MySensorsClass
 from .clean import CleanClass
 from .statistics import StatisticsClass
 
 
 # constants
-COMMANDS = [{"command": "mysensors-dont-call-from-telegram", "description": ""},
-            {"command": "clean.auto", "description": ""},
-            {"command": "clean.id.<id>", "description": ""},
-            {"command": "stats.temper.<duration>", "description": ""},
-            {"command": "stats.hum.<duration>", "description": ""}]
+COMMANDS = [
+    {"command": "mysensors-dont-call-from-telegram", "description": ""},
+    {"command": "db.clean.auto", "description": ""},
+    {"command": "db.clean.id.<id>", "description": ""},
+    {"command": "db.stat.temper.<duration>", "description": ""},
+    {"command": "db.stat.hum.<duration>", "description": ""},
+    {"command": "db.add.temper.<node_id>.<child_sensor_id>.<temper>", "description": ""},
+    {"command": "db.add.hum.<node_id>.<child_sensor_id>.<hum>", "description": ""}
+]
+
 
 
 # config
@@ -49,14 +54,14 @@ def handle(command):
         mysensors.run() # stay here forever
 
     # automatic clean of MySensors database
-    elif command == "clean.auto":
+    elif command == "db.clean.auto":
         clean = CleanClass(config_database)
         clean.clean_auto()
         text = "done"
         retval.append({"text": text})
 
     # clean MySensors database by the entry ID
-    elif command.find("clean.id.") != -1:
+    elif command.find("db.clean.id.") != -1:
         __, ___, ident = command.split(".")
         clean = CleanClass(config_database)
         clean.clean_by_id(int(ident))
@@ -64,14 +69,14 @@ def handle(command):
         retval.append({"text": text})
 
     # Temperature Statistics
-    elif command.find("stats.temper") != -1:
+    elif command.find("db.stat.temper") != -1:
         __, ___, duration = command.split(".")
         statistics = StatisticsClass(config_database)
         filename = statistics.update_temperature(duration)
         retval.append({"photo": filename})
 
     # Humidity Statistics
-    elif command.find("stats.hum") != -1:
+    elif command.find("db.stat.hum") != -1:
         __, ___, duration = command.split(".")
         statistics = StatisticsClass(config_database)
         filename = statistics.update_humidity(duration)
