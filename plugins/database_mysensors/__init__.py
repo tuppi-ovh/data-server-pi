@@ -101,7 +101,7 @@ def configure(config):
     """
     global config_database
     global config_serial_port
-    config_database = config.MYSENSORS_DATABASE_FILENAME
+    config_database = config.DATABASE_FILENAME
     config_serial_port = config.MYSENSORS_SERIAL_PORT
 
 

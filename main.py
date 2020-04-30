@@ -104,62 +104,51 @@ class MainClass(object):
             plugin.configure(config)
 
 
-    def execute(self, argv):
+    def execute(self, command, chat_id):
         """ Executes once.
         """
+        # log
+        print(" cmd=" + command + " chat=" + str(chat_id))
 
-        if len(argv) == 3:
+        # handle command in each plugin
+        responses = self.__handle_plugins(command)
+        if len(responses) > 0:
+            for r in responses:
+                if "text" in r:
+                    self.__telegram.send_telegram_text(chat_id, r["text"])
+                if "photo" in r:
+                    self.__telegram.send_telegram_photo(chat_id, r["photo"])
 
-            # convert sys argv to normal variables
-            filename = argv[0]
-            command = argv[1]
-            chat_id = int(argv[2])
+        # help
+        elif command == "help":
+            text = self.__get_commands_plugins()
+            self.__telegram.send_telegram_text(chat_id, text)
 
-            # log
-            print("len=" + str(len(argv)) + " file=" + filename + " cmd=" + command + " chat=" + str(chat_id))
+        # recursive execution in automatic mode, not from telegram
+        elif command == "auto":
+            while True:
+                commands = self.__telegram.recv_telegram_commands()
+                for cmd in commands:
+                    argv[1] = cmd["command"]
+                    argv[2] = str(cmd["chat_id"])
+                    self.execute(argv)
+                time.sleep(1)
 
-            # handle command in each plugin
-            responses = self.__handle_plugins(command)
-            if len(responses) > 0:
-                for r in responses:
-                    if "text" in r:
-                        self.__telegram.send_telegram_text(chat_id, r["text"])
-                    if "photo" in r:
-                        self.__telegram.send_telegram_photo(chat_id, r["photo"])
-
-            # help
-            elif command == "help":
-                text = self.__get_commands_plugins()
-                self.__telegram.send_telegram_text(chat_id, text)
-
-            # recursive execution in automatic mode, not from telegram
-            elif command == "auto":
-                while True:
-                    commands = self.__telegram.recv_telegram_commands()
-                    for cmd in commands:
-                        argv[1] = cmd["command"]
-                        argv[2] = str(cmd["chat_id"])
-                        self.execute(argv)
-                    time.sleep(1)
-
-            # unknown command
-            else:
-                # help message
-                text = "\"" + command + "\" is unknown command. \n"
-                text = text + self.__get_commands_plugins()
-                self.__telegram.send_telegram_text(chat_id, text)
-                # log
-                print(text)
-
+        # unknown command
         else:
-            print("incorrect number of args")
+            # help message
+            text = "\"" + command + "\" is unknown command. \n"
+            text = text + self.__get_commands_plugins()
+            self.__telegram.send_telegram_text(chat_id, text)
+            # log
+            print(text)
 
 
 def main(argv):
     """ Main function.
     """
     mainc = MainClass()
-    mainc.execute(argv)
+    mainc.execute(argv[1], argv[2])
 
 
 # Usage: python3 main.py <command> <chat_id>

@@ -10,11 +10,8 @@ This project should be run on Raspberry PI board.
 
 Python > 3.5 is requered.
 
-It is required to install these packages:
-- pandas by `python3 -m pip install pandas`
-- BeautifulSoup by `python3 -m pip install bs4`
-- matplotlib by `python3 -m pip install matplotlib`
-- huawei_lte_api by `python3 -m pip install huawei_lte_api`
+It is required to install packages:
+- python3 -m pip install -r requirements.txt
 - serial interface:
     - if Linux by `sudo apt-get update; sudo apt-get install python-serial python3-serial`
     - if Windows by `python3 -m pip install serial`
@@ -130,7 +127,7 @@ Conflicts=getty@tty1.service
 [Service]
 Type=simple
 WorkingDirectory=/path/to/http/files/www
-ExecStart=/usr/bin/python3 -m http.server 80
+ExecStart=/usr/bin/python3 -m http.server --cgi 80
 StandardInput=tty-force
 
 [Install]

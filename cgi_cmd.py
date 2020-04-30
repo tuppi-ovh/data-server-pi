@@ -21,16 +21,20 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 """
 
 import cgi 
-
+import main
 
 # https://dzone.com/articles/python-simple-http-server-with-cgi-scripts-enabled
 # https://python.doctor/page-python-serveur-web-creer-rapidement
 
-#######################
-# Request formats: 
-# VMC temperature & humidity: http://127.0.0.1/cgi-bin/cgi_set.py?plugin=plugins.mysensors&
+
+# Request format: http://127.0.0.1/cgi-bin/cgi_set.py?command=<command>&chat_id=<chat_id>
 
 form = cgi.FieldStorage()
-print("Content-type: text/html; charset=utf-8\n")
+#print("Content-type: text/html; charset=utf-8\n")
 
-print(form.getvalue("name"))
+
+mainc = main.MainClass()
+mainc.execute(form.getvalue("command"), form.getvalue("chat_id"))
+
+
+#print(form.getvalue("name"))
