@@ -23,5 +23,5 @@ import sys
 import main
 
 mainc = main.MainClass()
-mainc.execute(sys.argv[1], sys.argv[2])
-
+result = mainc.execute(sys.argv[1], sys.argv[2])
+print(result)

@@ -11,7 +11,7 @@ This project should be run on Raspberry PI board.
 Python > 3.5 is requered.
 
 It is required to install packages:
-- python3 -m pip install -r requirements.txt
+- main dependecies: `python3 -m pip install -r requirements.txt`
 - serial interface:
     - if Linux by `sudo apt-get update; sudo apt-get install python-serial python3-serial`
     - if Windows by `python3 -m pip install serial`

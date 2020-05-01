@@ -24,6 +24,7 @@ import collections
 from .mysensors import MySensorsClass
 from .clean import CleanClass
 from .statistics import StatisticsClass
+from .add import AddClass
 
 
 # constants
@@ -33,11 +34,9 @@ COMMANDS = [
     {"command": "db.clean.id.<id>", "description": ""},
     {"command": "db.stat.temper.<duration>", "description": ""},
     {"command": "db.stat.hum.<duration>", "description": ""},
-    {"command": "db.add.temper.<node_id>.<child_sensor_id>.<temper>", "description": ""},
-    {"command": "db.add.hum.<node_id>.<child_sensor_id>.<hum>", "description": ""}
+    {"command": "db.add.temper.<node_id>.<temper>", "description": ""},
+    {"command": "db.add.hum.<node_id>.<hum>", "description": ""}
 ]
-
-
 
 # config
 config_database = None
@@ -62,25 +61,41 @@ def handle(command):
 
     # clean MySensors database by the entry ID
     elif command.find("db.clean.id.") != -1:
-        __, ___, ident = command.split(".")
+        __, ___, ____, ident = command.split(".")
         clean = CleanClass(config_database)
         clean.clean_by_id(int(ident))
         text = "Element ID=" + ident + " is deleted"
         retval.append({"text": text})
 
     # Temperature Statistics
-    elif command.find("db.stat.temper") != -1:
-        __, ___, duration = command.split(".")
+    elif command.find("db.stat.temper.") != -1:
+        __, ___, ____, duration = command.split(".")
         statistics = StatisticsClass(config_database)
         filename = statistics.update_temperature(duration)
         retval.append({"photo": filename})
 
     # Humidity Statistics
-    elif command.find("db.stat.hum") != -1:
-        __, ___, duration = command.split(".")
+    elif command.find("db.stat.hum.") != -1:
+        __, ___, ____, duration = command.split(".")
         statistics = StatisticsClass(config_database)
         filename = statistics.update_humidity(duration)
         retval.append({"photo": filename})
+
+    # Add Temperature
+    elif command.find("db.add.temper.") != -1:
+        __, ___, ____, node_id, temper = command.split(".")
+        add = AddClass(config_database)
+        add.add_temper(int(node_id), float(temper))
+        text = "Added temperature=%s for node_id=%s" % (temper, node_id)
+        retval.append({"text": text})
+
+    # Add Temperature
+    elif command.find("db.add.hum.") != -1:
+        __, ___, ____, node_id, hum = command.split(".")
+        add = AddClass(config_database)
+        add.add_temper(int(node_id), float(hum))
+        text = "Added humidity=%s for node_id=%s" % (hum, node_id)
+        retval.append({"text": text})
 
     # unknown command
     else:

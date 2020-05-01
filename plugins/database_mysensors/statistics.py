@@ -28,18 +28,19 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from pandas.plotting import register_matplotlib_converters
 from .database import DataBaseClass
-from .daemon import MySensorsClass
 
 
 # graph colors
 colorlist = {}
 colorlist[DataBaseClass.NODE_ID_LOCAL] = 'red'
 colorlist[DataBaseClass.NODE_ID_EXT] = 'blue'
+colorlist[DataBaseClass.NODE_ID_VMC] = 'green'
 
 # node name list
 nodenamelist = {}
 nodenamelist[DataBaseClass.NODE_ID_LOCAL] = 'local'
 nodenamelist[DataBaseClass.NODE_ID_EXT] = 'ext'
+nodenamelist[DataBaseClass.NODE_ID_VMC] = 'vmc'
 
 # child name list
 childnamelist = {}
@@ -85,16 +86,16 @@ class StatisticsClass(DataBaseClass):
 
     def update_temperature(self, duration_str):
         """ Updates last value temperature. """
-        nodelist = {DataBaseClass.NODE_ID_LOCAL, DataBaseClass.NODE_ID_EXT}
-        exec = ExecClass(nodelist, DataBaseClass.CHILD_ID_TEMP, 
-                        DataBaseClass.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC]
+        exec = ExecClass(nodelist, self.CHILD_ID_TEMP, 
+                        self.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
         return self.update(exec)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
-        nodelist = {DataBaseClass.NODE_ID_LOCAL, DataBaseClass.NODE_ID_EXT}
-        exec = ExecClass(nodelist, DataBaseClass.CHILD_ID_HUM, 
-                        DataBaseClass.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC]
+        exec = ExecClass(nodelist, self.CHILD_ID_HUM, 
+                        self.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
         return self.update(exec)
 
     def update(self, exec_value):
@@ -119,9 +120,7 @@ class StatisticsClass(DataBaseClass):
                 for d in data:
                     dates.append(datetime.fromtimestamp(d[1]))
                     values.append(d[2])
-                    #print datetime.fromtimestamp(d[1]), ";", str(d[1]).replace('.',',')
-                plt.plot(dates, values,
-                            label=nodenamelist[n], color=colorlist[n])
+                plt.plot(dates, values, label=nodenamelist[n], color=colorlist[n])
             # plot
             plt.legend(loc='upper left')
             plt.gcf().autofmt_xdate()

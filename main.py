@@ -107,8 +107,10 @@ class MainClass(object):
     def execute(self, command, chat_id):
         """ Executes once.
         """
+        retval = None
+
         # log
-        print(" cmd=" + command + " chat=" + str(chat_id))
+        print("[main] cmd=" + command + " chat=" + str(chat_id))
 
         # handle command in each plugin
         responses = self.__handle_plugins(command)
@@ -118,20 +120,22 @@ class MainClass(object):
                     self.__telegram.send_telegram_text(chat_id, r["text"])
                 if "photo" in r:
                     self.__telegram.send_telegram_photo(chat_id, r["photo"])
+            # return value
+            retval = responses
 
         # help
         elif command == "help":
             text = self.__get_commands_plugins()
             self.__telegram.send_telegram_text(chat_id, text)
+            # return value
+            retval = [{"text": text}]
 
         # recursive execution in automatic mode, not from telegram
         elif command == "auto":
             while True:
                 commands = self.__telegram.recv_telegram_commands()
                 for cmd in commands:
-                    argv[1] = cmd["command"]
-                    argv[2] = str(cmd["chat_id"])
-                    self.execute(argv)
+                    self.execute(cmd["command"], cmd["chat_id"])
                 time.sleep(1)
 
         # unknown command
@@ -140,9 +144,10 @@ class MainClass(object):
             text = "\"" + command + "\" is unknown command. \n"
             text = text + self.__get_commands_plugins()
             self.__telegram.send_telegram_text(chat_id, text)
-            # log
-            print(text)
+            # return value
+            retval = [{"text": text}]
 
+        return retval
 
 def main(argv):
     """ Main function.

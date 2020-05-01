@@ -18,13 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For information on Data Server PI: tuppi.ovh@gmail.com
 """
 
-
-
 import time
 import sys
 from datetime import datetime
 from .database import DataBaseClass
-from .daemon import MySensorsClass
 
 
 class CleanClass(DataBaseClass):

@@ -32,9 +32,10 @@ import main
 form = cgi.FieldStorage()
 #print("Content-type: text/html; charset=utf-8\n")
 
-
 mainc = main.MainClass()
-mainc.execute(form.getvalue("command"), form.getvalue("chat_id"))
+result = mainc.execute(form.getvalue("command"), form.getvalue("chat_id"))
 
+# print on html page 
+print("\nExecution result:\n")
+print(result)
 
-#print(form.getvalue("name"))
