@@ -40,7 +40,8 @@ class TelegramClass(object):
         """ Send text message to destination.
         """
         data = {'chat_id': str(chatid), 'text': message}
-        __ = requests.get(URL + '/sendMessage', params=data)
+        if chatid != -1:
+            __ = requests.get(URL + '/sendMessage', params=data)
         # log
         print("[telegram] text: " + message)
 
@@ -49,7 +50,8 @@ class TelegramClass(object):
         """
         data = {'chat_id': str(chatid)}
         files = {'photo': open(filename, 'rb')}
-        __ = requests.get(URL + '/sendPhoto', params=data, files=files)
+        if chatid != -1:
+            __ = requests.get(URL + '/sendPhoto', params=data, files=files)
         # log
         print("[telegram] photo: " + filename)
 
@@ -117,7 +119,7 @@ def main(argv):
     """ Main function."""
 
     # handler object
-    telegram = TelegramClass("telegram")
+    telegram = TelegramClass()
 
     chat_id = int(argv[1])
     function = argv[2]

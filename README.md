@@ -50,6 +50,16 @@ METEO_URL = "http://xxxxxxxxxxxxxxxx.com"
 MAIN_PLUGINS = ["meteo", "mysensors", "huawei", "mysensors"]
 ```
 
+
+# HTTP Server
+
+To be able to tun correclty the http server you should:
+- create a `www` folder inside the project folder
+- create a `www/cgi-bin` folder
+- create a symlink `ln -s /absolut/path/to/project/cgi_cmd.py www/cgi-bin/cgi_cmd.py`  
+- make `cgi_cmd.py` executable by `chmod a+x cgi_cmd.py`
+
+
 # Systemd Services
 
 It is necessary to launch some systemd services to have a Telegram connection 

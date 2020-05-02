@@ -105,12 +105,15 @@ class MainClass(object):
 
 
     def execute(self, command, chat_id):
-        """ Executes once.
+        """ 
+        @brief Handles a command. 
+        @param command - string value of telegram command.
+        @param chat_id - integer value of telegram chat ID.
         """
         retval = None
 
         # log
-        print("[main] cmd=" + command + " chat=" + str(chat_id))
+        print("[main] cmd=" + command + " chat_id=" + str(chat_id))
 
         # handle command in each plugin
         responses = self.__handle_plugins(command)
