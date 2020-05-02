@@ -58,6 +58,7 @@ To be able to tun correclty the http server you should:
 - create a `www/cgi-bin` folder
 - create a symlink `ln -s /absolut/path/to/project/cgi_cmd.py www/cgi-bin/cgi_cmd.py`  
 - make `cgi_cmd.py` executable by `chmod a+x cgi_cmd.py`
+- add all necessary rights by `chmod 777 <filename>` to files like `MySensors.db` to have an access from cgi
 
 
 # Systemd Services

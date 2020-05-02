@@ -23,12 +23,15 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import cgi
 import main
 
+
 # Request format: http://127.0.0.1/cgi-bin/cgi_set.py?command=<command>&chat_id=<chat_id>
+form = cgi.FieldStorage()
+command = form.getvalue("command")
+chat_id = int(form.getvalue("chat_id"))
 
 # execute
-form = cgi.FieldStorage()
 mainc = main.MainClass()
-result = mainc.execute(form.getvalue("command"), int(form.getvalue("chat_id")))
+result = mainc.execute_from_cgi(command, chat_id)
 
 # print on html page 
 print("\nExecution result:\n")

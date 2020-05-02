@@ -104,6 +104,25 @@ class MainClass(object):
             plugin.configure(config)
 
 
+    def execute_from_cgi(self, command, chat_id):
+        """ Executes from CGI to be able to filter accessible commands.
+        """
+        retval = None
+        # authorized commands (to replace by an inteligent mecanism)
+        authorized_commands = [
+            "about", 
+            "show-c",
+            "show-w",
+            "db.add.temper.",
+            "db.add.hum."
+        ]
+        for c in authorized_commands:
+            if command.find(c) != -1:
+                retval = self.execute(command, chat_id)
+                break
+        # return
+        return retval
+
     def execute(self, command, chat_id):
         """ 
         @brief Handles a command. 
