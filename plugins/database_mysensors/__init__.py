@@ -93,7 +93,7 @@ def handle(command):
     elif command.find("db.add.hum.") != -1:
         __, ___, ____, node_id, hum_x10 = command.split(".")
         add = AddClass(config_database)
-        add.add_temper(int(node_id), float(hum_x10))
+        add.add_humidity(int(node_id), float(hum_x10))
         text = "Added humidity=%s/10 for node_id=%s" % (hum_x10, node_id)
         retval.append({"text": text})
 
