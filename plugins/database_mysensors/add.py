@@ -29,18 +29,28 @@ class AddClass(DataBaseClass):
     def __init__(self, db_filename):
         DataBaseClass.__init__(self, db_filename)
 
-    def add_temper(self, node_id, temper):
+    def add_temper(self, node_id, temper_x10):
+        """
+        @brief Adds a temperature value to the database.
+        @param node_id: node ID (integer).
+        @param temper_x10: temperature multiplied by 10 (float).
+        """
         # timestamp
         timestamp = int(time.mktime(datetime.now().timetuple()))
         # write to database
         self._database_add_entry(timestamp, node_id, self.CHILD_ID_TEMP, self.CMD_SET,
-                                    self.ACK_NONE, self.TYPE_SET_TEMP, temper)
+                                    self.ACK_NONE, self.TYPE_SET_TEMP, temper_x10 * 0.1)
         self._database_commit()                                    
 
-    def add_humidity(self, node_id, humidity):
+    def add_humidity(self, node_id, humidity_x10):
+        """
+        @brief Adds a humidity value to the database.
+        @param node_id: node ID (integer).
+        @param humidity_x10: humidity multiplied by 10 (float).
+        """
         # timestamp
         timestamp = int(time.mktime(datetime.now().timetuple()))
         # write to database
         self._database_add_entry(timestamp, node_id, self.CHILD_ID_HUM, self.CMD_SET,
-                                    self.ACK_NONE, self.TYPE_SET_HUM, humidity)
+                                    self.ACK_NONE, self.TYPE_SET_HUM, humidity_x10 * 0.1)
         self._database_commit()

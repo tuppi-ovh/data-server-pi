@@ -34,8 +34,8 @@ COMMANDS = [
     {"command": "db.clean.id.<id>", "description": ""},
     {"command": "db.stat.temper.<duration>", "description": ""},
     {"command": "db.stat.hum.<duration>", "description": ""},
-    {"command": "db.add.temper.<node_id>.<temper>", "description": ""},
-    {"command": "db.add.hum.<node_id>.<hum>", "description": ""}
+    {"command": "db.add.temper.<node_id>.<temper_x10>", "description": ""},
+    {"command": "db.add.hum.<node_id>.<hum_x10>", "description": ""}
 ]
 
 # config
@@ -83,18 +83,18 @@ def handle(command):
 
     # Add Temperature
     elif command.find("db.add.temper.") != -1:
-        __, ___, ____, node_id, temper = command.split(".")
+        __, ___, ____, node_id, temper_x10 = command.split(".")
         add = AddClass(config_database)
-        add.add_temper(int(node_id), float(temper))
-        text = "Added temperature=%s for node_id=%s" % (temper, node_id)
+        add.add_temper(int(node_id), float(temper_x10))
+        text = "Added temperature=%s/10 for node_id=%s" % (temper_x10, node_id)
         retval.append({"text": text})
 
     # Add Temperature
     elif command.find("db.add.hum.") != -1:
-        __, ___, ____, node_id, hum = command.split(".")
+        __, ___, ____, node_id, hum_x10 = command.split(".")
         add = AddClass(config_database)
-        add.add_temper(int(node_id), float(hum))
-        text = "Added humidity=%s for node_id=%s" % (hum, node_id)
+        add.add_temper(int(node_id), float(hum_x10))
+        text = "Added humidity=%s/10 for node_id=%s" % (hum_x10, node_id)
         retval.append({"text": text})
 
     # unknown command

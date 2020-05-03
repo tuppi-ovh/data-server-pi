@@ -137,13 +137,14 @@ class StatisticsClass(DataBaseClass):
             data["3-last-update"] = []
             # loop on all nodes
             for n in e.node_id:
-                db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
-                value = db_data[0][1]
-                data["1-sensor-place"].append(nodenamelist[n])
-                data["3-last-update"].append(
-                    datetime.fromtimestamp(db_data[0][0]))
-                data["2-" + childnamelist[e.child_sensor_id]
-                        ].append(value)
+                try:
+                    db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
+                    value = db_data[0][1]
+                    data["1-sensor-place"].append(nodenamelist[n])
+                    data["3-last-update"].append(datetime.fromtimestamp(db_data[0][0]))
+                    data["2-" + childnamelist[e.child_sensor_id]].append(value)
+                except:
+                    print("[statistics] last entry not found")
 
             # Convert the dictionary into DataFrame (in alphabetic order!)
             df = pd.DataFrame(data)
