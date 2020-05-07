@@ -35,12 +35,14 @@ colorlist = {}
 colorlist[DataBaseClass.NODE_ID_LOCAL] = 'red'
 colorlist[DataBaseClass.NODE_ID_EXT] = 'blue'
 colorlist[DataBaseClass.NODE_ID_VMC] = 'green'
+colorlist[DataBaseClass.NODE_ID_UNDERGROUND] = 'black'
 
 # node name list
 nodenamelist = {}
 nodenamelist[DataBaseClass.NODE_ID_LOCAL] = 'local'
 nodenamelist[DataBaseClass.NODE_ID_EXT] = 'ext'
 nodenamelist[DataBaseClass.NODE_ID_VMC] = 'vmc'
+nodenamelist[DataBaseClass.NODE_ID_UNDERGROUND] = 'underground'
 
 # child name list
 childnamelist = {}
@@ -86,14 +88,14 @@ class StatisticsClass(DataBaseClass):
 
     def update_temperature(self, duration_str):
         """ Updates last value temperature. """
-        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC]
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
         exec = ExecClass(nodelist, self.CHILD_ID_TEMP, 
                         self.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
         return self.update(exec)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
-        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC]
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
         exec = ExecClass(nodelist, self.CHILD_ID_HUM, 
                         self.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
         return self.update(exec)
