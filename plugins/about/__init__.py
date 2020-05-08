@@ -1,4 +1,3 @@
-
 """
 Data Server PI - high level application for the Smart Home data acquisition.
 Copyright (C) 2020 Vadim MUKHTAROV
@@ -23,9 +22,11 @@ import sys
 
 
 # constants
-COMMANDS = [{"command": "about", "description": ""},
-            {"command": "show-w", "description": ""},
-            {"command": "show-c", "description": ""}]
+COMMANDS = [
+    {"command": "about", "description": ""},
+    {"command": "show-w", "description": ""},
+    {"command": "show-c", "description": ""},
+]
 
 
 def handle(command):
@@ -62,7 +63,7 @@ def handle(command):
     # unknown command
     else:
         pass
-    # return 
+    # return
     return retval
 
 
@@ -85,13 +86,12 @@ def main(argv):
     configure(config)
     # handle
     msg = handle(argv[1])
-    # print 
+    # print
     if len(msg) > 0:
         print(msg[0]["text"])
 
 
-# Usage: python3 __init__.py <command> 
-# Usage example: python3 .\plugins\about\__init__.py about 
+# Usage: python3 __init__.py <command>
+# Usage example: python3 .\plugins\about\__init__.py about
 if __name__ == "__main__":
     main(sys.argv)
-

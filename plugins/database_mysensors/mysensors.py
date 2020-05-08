@@ -27,7 +27,6 @@ from datetime import datetime
 from .database import DataBaseClass
 
 
-
 class ThreadSerialRecv(Thread):
     """Thread for serial data receive."""
 
@@ -51,24 +50,23 @@ class ThreadSerialRecv(Thread):
                 time.sleep(10)
             else:
                 byt = self.__serial.read(256)
-                string = byt.decode('ascii')
+                string = byt.decode("ascii")
                 self.__buffer += string
 
             # split elements
-            buffer_separated = self.__buffer.split('\n')
+            buffer_separated = self.__buffer.split("\n")
 
             # append elements
             length = len(buffer_separated)
-            for i in range(length-1):
+            for i in range(length - 1):
                 self.__commands.append(buffer_separated[i])
                 self.__logs.append(buffer_separated[i])
 
             # stock the last element if \n not found
-            self.__buffer = buffer_separated[length-1]
+            self.__buffer = buffer_separated[length - 1]
 
             # switch to another thread
             time.sleep(0)
-
 
 
 class MySensorsClass(DataBaseClass):
@@ -83,7 +81,7 @@ class MySensorsClass(DataBaseClass):
         commands = []
         logs = []
 
-        # thread for UART data receive 
+        # thread for UART data receive
         thread_recv = ThreadSerialRecv(self.__port, commands, logs)
         # daemon mode for CTRL-C exits
         thread_recv.daemon = True
@@ -93,9 +91,9 @@ class MySensorsClass(DataBaseClass):
         # infinit loop
         while True:
 
-            # stock logs 
+            # stock logs
             length = len(logs)
-            # loop on all logs 
+            # loop on all logs
             for i in range(length):
                 # extract an element
                 element = logs[length - i - 1]
@@ -106,7 +104,7 @@ class MySensorsClass(DataBaseClass):
             # number of commands
             length = len(commands)
             commit = False
-            # loop on all commands 
+            # loop on all commands
             for i in range(length):
                 # timestamp
                 timestamp = int(time.mktime(datetime.now().timetuple()))
@@ -114,15 +112,20 @@ class MySensorsClass(DataBaseClass):
                 element = commands[length - i - 1]
                 del commands[length - i - 1]
                 # parse
-                element_separated = element.split(';')
+                element_separated = element.split(";")
                 # write to database
-                self._database_add_entry(timestamp, int(element_separated[0]), int(element_separated[1]),
-                                         int(element_separated[2]), int(element_separated[3]),
-                                         int(element_separated[4]), float(element_separated[5]))
+                self._database_add_entry(
+                    timestamp,
+                    int(element_separated[0]),
+                    int(element_separated[1]),
+                    int(element_separated[2]),
+                    int(element_separated[3]),
+                    int(element_separated[4]),
+                    float(element_separated[5]),
+                )
                 commit = True
             # commit database
             if commit:
                 self._database_commit()
             # sleep
             time.sleep(1)
-

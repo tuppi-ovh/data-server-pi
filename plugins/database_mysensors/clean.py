@@ -52,14 +52,24 @@ class CleanClass(DataBaseClass):
     def clean_keep_peaks(self, period_str, place_str, var_str):
         # period
         if period_str == "month":
-            timestamp_today = int(time.mktime(datetime.now().replace(
-                hour=0, minute=0, second=0, microsecond=0).timetuple()))
+            timestamp_today = int(
+                time.mktime(
+                    datetime.now()
+                    .replace(hour=0, minute=0, second=0, microsecond=0)
+                    .timetuple()
+                )
+            )
             i_begin = 31
             i_end = 365
             step = 60 * 60 * 24
         elif period_str == "day":
-            timestamp_today = int(time.mktime(datetime.now().replace(
-                hour=0, minute=0, second=0, microsecond=0).timetuple()))
+            timestamp_today = int(
+                time.mktime(
+                    datetime.now()
+                    .replace(hour=0, minute=0, second=0, microsecond=0)
+                    .timetuple()
+                )
+            )
             i_begin = 1
             i_end = 30 * 24 + 1
             step = 60 * 60
@@ -85,11 +95,14 @@ class CleanClass(DataBaseClass):
             elif i == (i_end - 1):
                 timestamp_very_begin = timestamp_begin
             entries = self._database_select_entries(
-                node_id, child_id, type_set, timestamp_begin, timestamp_end)
+                node_id, child_id, type_set, timestamp_begin, timestamp_end
+            )
             e_min = self._database_select_min_entry(
-                node_id, child_id, type_set, timestamp_begin, timestamp_end)
+                node_id, child_id, type_set, timestamp_begin, timestamp_end
+            )
             e_max = self._database_select_max_entry(
-                node_id, child_id, type_set, timestamp_begin, timestamp_end)
+                node_id, child_id, type_set, timestamp_begin, timestamp_end
+            )
             # delete elements by ID
             for e in entries:
                 if e[0] != e_min[0][0] and e[0] != e_max[0][0]:
@@ -97,8 +110,19 @@ class CleanClass(DataBaseClass):
                     counter = counter + 1
         self._database_commit()
         # log
-        print("Keep peaks from " + str(timestamp_very_begin) + " to " + str(timestamp_very_end) +
-              ", " + place_str + ", " + var_str + ": deleted " + str(counter) + " elements")
+        print(
+            "Keep peaks from "
+            + str(timestamp_very_begin)
+            + " to "
+            + str(timestamp_very_end)
+            + ", "
+            + place_str
+            + ", "
+            + var_str
+            + ": deleted "
+            + str(counter)
+            + " elements"
+        )
 
     def clean_auto(self):
         self.clean_debug()
@@ -138,8 +162,12 @@ def main(argv):
         print("    --help                      : print this message")
         print("    --id <id>                   : delete by ID")
         print("    --debug                     : delete all debug entries")
-        print("    --peak <from> <place> <var> : clean entries from=day/month place=local/ext var=temp/hum")
-        print("    --auto                      : delete entries automatically (debug, old, etc.)")
+        print(
+            "    --peak <from> <place> <var> : clean entries from=day/month place=local/ext var=temp/hum"
+        )
+        print(
+            "    --auto                      : delete entries automatically (debug, old, etc.)"
+        )
         print("    --vacuum                    : free space after deleting entries")
         print("")
 

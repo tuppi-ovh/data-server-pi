@@ -27,9 +27,10 @@ from telegram import TelegramClass
 
 
 # constants
-COMMANDS = ({"command": "help", "description": ""},
-            {"command": "auto", "description": ""})
-
+COMMANDS = (
+    {"command": "help", "description": ""},
+    {"command": "auto", "description": ""},
+)
 
 
 class MainClass(object):
@@ -40,11 +41,10 @@ class MainClass(object):
         """ Constructor.
         """
         self.__telegram = TelegramClass()
-        # plugins 
+        # plugins
         self.__list_plugins()
         self.__load_plugins()
         self.__configure_plugins(config)
-        
 
     def __handle_plugins(self, command):
         """ Handles plugins. 
@@ -56,7 +56,6 @@ class MainClass(object):
                 retval = result
                 break
         return retval
-
 
     def __list_plugins(self):
         """ Scans for all available plugins.
@@ -70,20 +69,24 @@ class MainClass(object):
             enabled_plugins.append("about")
         for i in possible_plugins:
             location = os.path.join(config.MAIN_PLUGINS_PATH, i)
-            if os.path.isdir(location) and ("__init__.py" in os.listdir(location)) and (i in enabled_plugins):
-                #info = imp.find_module(MainModule, [location])
+            if (
+                os.path.isdir(location)
+                and ("__init__.py" in os.listdir(location))
+                and (i in enabled_plugins)
+            ):
+                # info = imp.find_module(MainModule, [location])
                 info = None
                 self.__plugins_info.append({"name": i, "info": info})
-
 
     def __load_plugins(self):
         """ Loads plugins.
         """
         self.__plugins = []
         for plugin_info in self.__plugins_info:
-            self.__plugins.append(importlib.import_module("plugins." + plugin_info["name"] + ".__init__"))
+            self.__plugins.append(
+                importlib.import_module("plugins." + plugin_info["name"] + ".__init__")
+            )
 
-    
     def __get_commands_plugins(self):
         """ Lists plugin commands.
         """
@@ -96,13 +99,11 @@ class MainClass(object):
             text = text + "  " + c["command"] + "\n"
         return text
 
-
     def __configure_plugins(self, config):
         """ Configures plugins. 
         """
         for plugin in self.__plugins:
             plugin.configure(config)
-
 
     def execute_from_cgi(self, command, chat_id):
         """ Executes from CGI to be able to filter accessible commands.
@@ -110,11 +111,11 @@ class MainClass(object):
         retval = None
         # authorized commands (to replace by an inteligent mecanism)
         authorized_commands = [
-            "about", 
+            "about",
             "show-c",
             "show-w",
             "db.add.temper.",
-            "db.add.hum."
+            "db.add.hum.",
         ]
         for c in authorized_commands:
             if command.find(c) != -1:
@@ -163,13 +164,14 @@ class MainClass(object):
         # unknown command
         else:
             # help message
-            text = "\"" + command + "\" is unknown command. \n"
+            text = '"' + command + '" is unknown command. \n'
             text = text + self.__get_commands_plugins()
             self.__telegram.send_telegram_text(chat_id, text)
             # return value
             retval = [{"text": text}]
 
         return retval
+
 
 def main(argv):
     """ Main function.

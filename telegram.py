@@ -31,7 +31,6 @@ URL = "https://api.telegram.org/bot" + config.TELEGRAM_BOT_TOKEN
 
 
 class TelegramClass(object):
-
     def __init__(self):
         self.__updates_offset = 0
         self.__counter_send = 0
@@ -39,19 +38,19 @@ class TelegramClass(object):
     def send_telegram_text(self, chatid, message):
         """ Send text message to destination.
         """
-        data = {'chat_id': str(chatid), 'text': message}
+        data = {"chat_id": str(chatid), "text": message}
         if chatid != -1:
-            __ = requests.get(URL + '/sendMessage', params=data)
+            __ = requests.get(URL + "/sendMessage", params=data)
         # log
         print("[telegram] text: " + message)
 
     def send_telegram_photo(self, chatid, filename):
         """ Send a photo to destination.
         """
-        data = {'chat_id': str(chatid)}
-        files = {'photo': open(filename, 'rb')}
+        data = {"chat_id": str(chatid)}
+        files = {"photo": open(filename, "rb")}
         if chatid != -1:
-            __ = requests.get(URL + '/sendPhoto', params=data, files=files)
+            __ = requests.get(URL + "/sendPhoto", params=data, files=files)
         # log
         print("[telegram] photo: " + filename)
 
@@ -63,8 +62,13 @@ class TelegramClass(object):
         commands = []
 
         # url
-        url_custom = URL + "/getUpdates?timeout=" + \
-            str(TIMEOUT_TELEGRAM) + "&offset=" + str(self.__updates_offset)
+        url_custom = (
+            URL
+            + "/getUpdates?timeout="
+            + str(TIMEOUT_TELEGRAM)
+            + "&offset="
+            + str(self.__updates_offset)
+        )
         # log for debug
         print("url=" + url_custom)
 
@@ -87,8 +91,12 @@ class TelegramClass(object):
                 updates = json.loads(response.content.decode("utf8"))
                 # log for debug
                 print("json ok")
-                print("offset=" + str(self.__updates_offset) +
-                              " updates_nb=" + str(len(updates["result"])))
+                print(
+                    "offset="
+                    + str(self.__updates_offset)
+                    + " updates_nb="
+                    + str(len(updates["result"]))
+                )
                 # handle updates
                 if updates["ok"] and len(updates["result"]) > 0:
 

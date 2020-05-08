@@ -57,61 +57,81 @@ class DataBaseClass(object):
         self.__db = sqlite3.connect(db_filename)
         self.__query_curs = self.__db.cursor()
 
-    def _database_add_entry(self, timestamp, node_id, child_sensor_id, command, ack, typ, payload):
-        self.__query_curs.execute('''INSERT INTO MySensors (timestamp,node_id,
-                                  child_sensor_id,command,ack,type,payload) VALUES (?,?,?,?,?,?,?)''',
-                                  (timestamp, node_id, child_sensor_id, command, ack, typ, payload))
+    def _database_add_entry(
+        self, timestamp, node_id, child_sensor_id, command, ack, typ, payload
+    ):
+        self.__query_curs.execute(
+            """INSERT INTO MySensors (timestamp,node_id,
+                                  child_sensor_id,command,ack,type,payload) VALUES (?,?,?,?,?,?,?)""",
+            (timestamp, node_id, child_sensor_id, command, ack, typ, payload),
+        )
 
     def _database_delete_entries_by_node_id(self, node_id):
-        self.__query_curs.execute('''DELETE FROM MySensors WHERE node_id=?''', (node_id,))
+        self.__query_curs.execute(
+            """DELETE FROM MySensors WHERE node_id=?""", (node_id,)
+        )
 
     def _database_last_entry(self, node_id, child_sensor_id, typ):
         self.__query_curs.execute(
-            '''SELECT timestamp, payload FROM MySensors WHERE node_id=? AND child_sensor_id=?
-            AND type=? ORDER BY timestamp DESC LIMIT 1''',
-            (node_id, child_sensor_id, typ))
+            """SELECT timestamp, payload FROM MySensors WHERE node_id=? AND child_sensor_id=?
+            AND type=? ORDER BY timestamp DESC LIMIT 1""",
+            (node_id, child_sensor_id, typ),
+        )
         return self.__query_curs.fetchall()
 
     def _database_commit(self):
         self.__db.commit()
 
     def _database_delete_entry_by_node_id(self, node_id):
-        self.__query_curs.execute('''DELETE FROM MySensors WHERE node_id=?''', (node_id,))
+        self.__query_curs.execute(
+            """DELETE FROM MySensors WHERE node_id=?""", (node_id,)
+        )
 
     def _database_delete_entry_by_id(self, entry_id):
-        self.__query_curs.execute('''DELETE FROM MySensors WHERE id=?''', (entry_id,))
+        self.__query_curs.execute("""DELETE FROM MySensors WHERE id=?""", (entry_id,))
 
     def _database_vacuum(self):
-        self.__query_curs.execute('''VACUUM''')
+        self.__query_curs.execute("""VACUUM""")
 
     def _database_select_entries(self, node_id, child_sensor_id, typ, ts_begin, ts_end):
-        self.__query_curs.execute('''SELECT id, timestamp, payload FROM MySensors WHERE
+        self.__query_curs.execute(
+            """SELECT id, timestamp, payload FROM MySensors WHERE
                                   node_id=? AND child_sensor_id=? AND type=?
-                                  AND timestamp>=? AND timestamp<=?''',
-                                  (node_id, child_sensor_id, typ, ts_begin, ts_end))
+                                  AND timestamp>=? AND timestamp<=?""",
+            (node_id, child_sensor_id, typ, ts_begin, ts_end),
+        )
         return self.__query_curs.fetchall()
 
-    def _database_select_min_entry(self, node_id, child_sensor_id, typ, ts_begin, ts_end):
-        self.__query_curs.execute('''SELECT id, timestamp, MIN(payload) FROM MySensors WHERE
+    def _database_select_min_entry(
+        self, node_id, child_sensor_id, typ, ts_begin, ts_end
+    ):
+        self.__query_curs.execute(
+            """SELECT id, timestamp, MIN(payload) FROM MySensors WHERE
                                   node_id=? AND child_sensor_id=? AND type=?
-                                  AND timestamp>=? AND timestamp<=?''',
-                                  (node_id, child_sensor_id, typ, ts_begin, ts_end))
+                                  AND timestamp>=? AND timestamp<=?""",
+            (node_id, child_sensor_id, typ, ts_begin, ts_end),
+        )
         return self.__query_curs.fetchall()
 
-    def _database_select_max_entry(self, node_id, child_sensor_id, typ, ts_begin, ts_end):
-        self.__query_curs.execute('''SELECT id, timestamp, MAX(payload) FROM MySensors WHERE
+    def _database_select_max_entry(
+        self, node_id, child_sensor_id, typ, ts_begin, ts_end
+    ):
+        self.__query_curs.execute(
+            """SELECT id, timestamp, MAX(payload) FROM MySensors WHERE
                                   node_id=? AND child_sensor_id=? AND type=?
-                                  AND timestamp>=? AND timestamp<=?''',
-                                  (node_id, child_sensor_id, typ, ts_begin, ts_end))
+                                  AND timestamp>=? AND timestamp<=?""",
+            (node_id, child_sensor_id, typ, ts_begin, ts_end),
+        )
         return self.__query_curs.fetchall()
 
     def _database_create_table(self):
         """Create a table as node_id / child_sensor_id / command / ack / type / payload."""
-        self.__query_curs.execute('''CREATE TABLE MySensors
+        self.__query_curs.execute(
+            """CREATE TABLE MySensors
                                   (id INTEGER PRIMARY KEY,timestamp INTEGER,node_id INTEGER,
                                   child_sensor_id INTEGER,command INTEGER,ack INTEGER,
-                                  type INTEGER,payload REAL)''')
-
+                                  type INTEGER,payload REAL)"""
+        )
 
 
 def main(argv):
@@ -120,6 +140,6 @@ def main(argv):
     __ = DataBaseClass(argv[1])
 
 
-# Usage: python3 telegram.py <database> 
+# Usage: python3 telegram.py <database>
 if __name__ == "__main__":
     main(sys.argv)

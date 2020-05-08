@@ -35,7 +35,7 @@ COMMANDS = [
     {"command": "db.stat.temper.<duration>", "description": ""},
     {"command": "db.stat.hum.<duration>", "description": ""},
     {"command": "db.add.temper.<node_id>.<temper_x10>", "description": ""},
-    {"command": "db.add.hum.<node_id>.<hum_x10>", "description": ""}
+    {"command": "db.add.hum.<node_id>.<hum_x10>", "description": ""},
 ]
 
 # config
@@ -47,10 +47,10 @@ def handle(command):
     """ Handles telegram command.
     """
     retval = []
-    # meteo for today 
+    # meteo for today
     if command == "mysensors-dont-call-from-telegram":
         mysensors = MySensorsClass(config_serial_port, config_database)
-        mysensors.run() # stay here forever
+        mysensors.run()  # stay here forever
 
     # automatic clean of MySensors database
     elif command == "db.clean.auto":
@@ -100,8 +100,8 @@ def handle(command):
     # unknown command
     else:
         pass
-    
-    # return 
+
+    # return
     return retval
 
 
@@ -124,7 +124,9 @@ def main(argv):
     """ Main function for standalone execution.
     """
     # config
-    config = collections.namedtuple('config', ['MYSENSORS_DATABASE_FILENAME', 'MYSENSORS_SERIAL_PORT'])
+    config = collections.namedtuple(
+        "config", ["MYSENSORS_DATABASE_FILENAME", "MYSENSORS_SERIAL_PORT"]
+    )
     config.MYSENSORS_DATABASE_FILENAME = argv[2]
     if argv[3] == "None":
         config.MYSENSORS_SERIAL_PORT = None
@@ -133,7 +135,7 @@ def main(argv):
     configure(config)
     # handle
     msg = handle(argv[1])
-    # print 
+    # print
     if len(msg) > 0:
         print(msg[0]["text"])
 
