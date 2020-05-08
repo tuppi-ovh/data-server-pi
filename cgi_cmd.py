@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 """
 Data Server PI - high level application for the Smart Home data acquisition.
 Copyright (C) 2020 Vadim MUKHTAROV
@@ -18,10 +20,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 For information on Data Server PI: tuppi.ovh@gmail.com
 """
 
-import os
-import sys
+import cgi
 import main
 
+
+# Request format: http://127.0.0.1/cgi-bin/cgi_set.py?command=<command>&chat_id=<chat_id>
+form = cgi.FieldStorage()
+command = form.getvalue("command")
+chat_id = int(form.getvalue("chat_id"))
+
+# execute
 mainc = main.MainClass()
-result = mainc.execute(sys.argv[1], int(sys.argv[2]))
+result = mainc.execute_from_cgi(command, chat_id)
+
+# print on html page 
+print("\nExecution result:\n")
 print(result)
+

@@ -25,6 +25,33 @@ import sqlite3
 class DataBaseClass(object):
     """Database management class."""
 
+    # node id
+    NODE_ID_LOCAL = 100
+    NODE_ID_EXT = 103
+    NODE_ID_VMC = 104
+    NODE_ID_UNDERGROUND = 105
+    NODE_ID_DEBUG = 133
+    # child id
+    CHILD_ID_TEMP = 0
+    CHILD_ID_HUM = 1
+    CHILD_ID_DEBUG = 33
+    # cmd
+    CMD_PRESENTATION = 0
+    CMD_SET = 1
+    # ack
+    ACK_NONE = 0
+    # type pres
+    TYPE_PRES_TEMP = 6
+    TYPE_PRES_HUM = 7
+    TYPE_PRES_CUSTOM = 23
+    TYPE_PRES_INFO = 36
+    # type set
+    TYPE_SET_TEMP = 0
+    TYPE_SET_HUM = 1
+    TYPE_SET_VAR1 = 24
+    TYPE_SET_TEXT = 47
+    TYPE_SET_CUSTOM = 48
+
     def __init__(self, db_filename):
         """ Constructor."""
         self.__db = sqlite3.connect(db_filename)

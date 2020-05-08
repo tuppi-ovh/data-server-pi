@@ -37,23 +37,23 @@ class TelegramClass(object):
         self.__counter_send = 0
 
     def send_telegram_text(self, chatid, message):
+        """ Send text message to destination.
         """
-        Send text message to destination.
-        """
-        self.__counter_send = self.__counter_send + 1
-
         data = {'chat_id': str(chatid), 'text': message}
-        __ = requests.get(URL + '/sendMessage', params=data)
+        if chatid != -1:
+            __ = requests.get(URL + '/sendMessage', params=data)
+        # log
+        print("[telegram] text: " + message)
 
     def send_telegram_photo(self, chatid, filename):
+        """ Send a photo to destination.
         """
-        Send a photo to destination.
-        """
-        self.__counter_send = self.__counter_send + 1
-
         data = {'chat_id': str(chatid)}
         files = {'photo': open(filename, 'rb')}
-        __ = requests.get(URL + '/sendPhoto', params=data, files=files)
+        if chatid != -1:
+            __ = requests.get(URL + '/sendPhoto', params=data, files=files)
+        # log
+        print("[telegram] photo: " + filename)
 
     def recv_telegram_commands(self):
         """
@@ -119,7 +119,7 @@ def main(argv):
     """ Main function."""
 
     # handler object
-    telegram = TelegramClass("telegram")
+    telegram = TelegramClass()
 
     chat_id = int(argv[1])
     function = argv[2]

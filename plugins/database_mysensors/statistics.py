@@ -28,23 +28,26 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from pandas.plotting import register_matplotlib_converters
 from .database import DataBaseClass
-from .daemon import MySensorsClass
 
 
 # graph colors
 colorlist = {}
-colorlist[MySensorsClass.MYSENSORS_NODE_ID_LOCAL] = 'red'
-colorlist[MySensorsClass.MYSENSORS_NODE_ID_EXT] = 'blue'
+colorlist[DataBaseClass.NODE_ID_LOCAL] = 'red'
+colorlist[DataBaseClass.NODE_ID_EXT] = 'blue'
+colorlist[DataBaseClass.NODE_ID_VMC] = 'green'
+colorlist[DataBaseClass.NODE_ID_UNDERGROUND] = 'black'
 
 # node name list
 nodenamelist = {}
-nodenamelist[MySensorsClass.MYSENSORS_NODE_ID_LOCAL] = 'local'
-nodenamelist[MySensorsClass.MYSENSORS_NODE_ID_EXT] = 'ext'
+nodenamelist[DataBaseClass.NODE_ID_LOCAL] = 'local'
+nodenamelist[DataBaseClass.NODE_ID_EXT] = 'ext'
+nodenamelist[DataBaseClass.NODE_ID_VMC] = 'vmc'
+nodenamelist[DataBaseClass.NODE_ID_UNDERGROUND] = 'underground'
 
 # child name list
 childnamelist = {}
-childnamelist[MySensorsClass.MYSENSORS_CHILD_ID_TEMP] = 'temper'
-childnamelist[MySensorsClass.MYSENSORS_CHILD_ID_HUM] = 'hum'
+childnamelist[DataBaseClass.CHILD_ID_TEMP] = 'temper'
+childnamelist[DataBaseClass.CHILD_ID_HUM] = 'hum'
 
 
 class ExecClass():
@@ -85,16 +88,16 @@ class StatisticsClass(DataBaseClass):
 
     def update_temperature(self, duration_str):
         """ Updates last value temperature. """
-        nodelist = {MySensorsClass.MYSENSORS_NODE_ID_LOCAL, MySensorsClass.MYSENSORS_NODE_ID_EXT}
-        exec = ExecClass(nodelist, MySensorsClass.MYSENSORS_CHILD_ID_TEMP, 
-                        MySensorsClass.MYSENSORS_TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
+        exec = ExecClass(nodelist, self.CHILD_ID_TEMP, 
+                        self.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
         return self.update(exec)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
-        nodelist = {MySensorsClass.MYSENSORS_NODE_ID_LOCAL, MySensorsClass.MYSENSORS_NODE_ID_EXT}
-        exec = ExecClass(nodelist, MySensorsClass.MYSENSORS_CHILD_ID_HUM, 
-                        MySensorsClass.MYSENSORS_TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
+        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
+        exec = ExecClass(nodelist, self.CHILD_ID_HUM, 
+                        self.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
         return self.update(exec)
 
     def update(self, exec_value):
@@ -119,9 +122,7 @@ class StatisticsClass(DataBaseClass):
                 for d in data:
                     dates.append(datetime.fromtimestamp(d[1]))
                     values.append(d[2])
-                    #print datetime.fromtimestamp(d[1]), ";", str(d[1]).replace('.',',')
-                plt.plot(dates, values,
-                            label=nodenamelist[n], color=colorlist[n])
+                plt.plot(dates, values, label=nodenamelist[n], color=colorlist[n])
             # plot
             plt.legend(loc='upper left')
             plt.gcf().autofmt_xdate()
@@ -138,13 +139,14 @@ class StatisticsClass(DataBaseClass):
             data["3-last-update"] = []
             # loop on all nodes
             for n in e.node_id:
-                db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
-                value = db_data[0][1]
-                data["1-sensor-place"].append(nodenamelist[n])
-                data["3-last-update"].append(
-                    datetime.fromtimestamp(db_data[0][0]))
-                data["2-" + childnamelist[e.child_sensor_id]
-                        ].append(value)
+                try:
+                    db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
+                    value = db_data[0][1]
+                    data["1-sensor-place"].append(nodenamelist[n])
+                    data["3-last-update"].append(datetime.fromtimestamp(db_data[0][0]))
+                    data["2-" + childnamelist[e.child_sensor_id]].append(value)
+                except:
+                    print("[statistics] last entry not found")
 
             # Convert the dictionary into DataFrame (in alphabetic order!)
             df = pd.DataFrame(data)

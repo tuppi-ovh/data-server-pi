@@ -10,11 +10,8 @@ This project should be run on Raspberry PI board.
 
 Python > 3.5 is requered.
 
-It is required to install these packages:
-- pandas by `python3 -m pip install pandas`
-- BeautifulSoup by `python3 -m pip install bs4`
-- matplotlib by `python3 -m pip install matplotlib`
-- huawei_lte_api by `python3 -m pip install huawei_lte_api`
+It is required to install packages:
+- main dependecies: `python3 -m pip install -r requirements.txt`
 - serial interface:
     - if Linux by `sudo apt-get update; sudo apt-get install python-serial python3-serial`
     - if Windows by `python3 -m pip install serial`
@@ -52,6 +49,17 @@ METEO_URL = "http://xxxxxxxxxxxxxxxx.com"
 # Enabled plugins (about is forced to be enabled)
 MAIN_PLUGINS = ["meteo", "mysensors", "huawei", "mysensors"]
 ```
+
+
+# HTTP Server
+
+To be able to tun correclty the http server you should:
+- create a `www` folder inside the project folder
+- create a `www/cgi-bin` folder
+- create a symlink `ln -s /absolut/path/to/project/cgi_cmd.py www/cgi-bin/cgi_cmd.py`  
+- make `cgi_cmd.py` executable by `chmod a+x cgi_cmd.py`
+- add all necessary rights by `chmod 777 <filename>` to files like `MySensors.db` to have an access from cgi
+
 
 # Systemd Services
 
@@ -130,7 +138,7 @@ Conflicts=getty@tty1.service
 [Service]
 Type=simple
 WorkingDirectory=/path/to/http/files/www
-ExecStart=/usr/bin/python3 -m http.server 80
+ExecStart=/usr/bin/python3 -m http.server --cgi 80
 StandardInput=tty-force
 
 [Install]
