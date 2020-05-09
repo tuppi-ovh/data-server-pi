@@ -30,7 +30,7 @@ TIMEOUT_REQUESTS = TIMEOUT_TELEGRAM + 30
 URL = "https://api.telegram.org/bot" + config.TELEGRAM_BOT_TOKEN
 
 
-class TelegramClass(object):
+class TelegramClass:
     def __init__(self):
         self.__updates_offset = 0
         self.__counter_send = 0

@@ -29,7 +29,7 @@ class DataBaseClass(object):
     NODE_ID_LOCAL = 100
     NODE_ID_EXT = 103
     NODE_ID_VMC = 104
-    NODE_ID_UNDERGROUND = 105
+    NODE_ID_BASEMENT = 105
     NODE_ID_DEBUG = 133
     # child id
     CHILD_ID_TEMP = 0

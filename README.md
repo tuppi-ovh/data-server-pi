@@ -161,10 +161,6 @@ sudo systemctl status data-server-pi-httpd.service
 - Web page of this project: https://tuppi.ovh/data_server_pi/doc_data_server_pi.
 
 
-# Useful Commands
-
-- Format with `black`: `python3 -m black --exclude venv .`
-
 # License
 
 Refer to the [LICENSE](LICENSE) file.

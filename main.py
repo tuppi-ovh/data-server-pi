@@ -33,7 +33,7 @@ COMMANDS = (
 )
 
 
-class MainClass(object):
+class MainClass:
     """ Main class.
     """
 
@@ -93,17 +93,17 @@ class MainClass(object):
         text = "Available commands:\n"
         for plugin in self.__plugins:
             cmds = plugin.get_commands()
-            for c in cmds:
-                text = text + "  " + c["command"] + "\n"
-        for c in COMMANDS:
-            text = text + "  " + c["command"] + "\n"
+            for cmd in cmds:
+                text = text + "  " + cmd["command"] + "\n"
+        for cmd in COMMANDS:
+            text = text + "  " + cmd["command"] + "\n"
         return text
 
-    def __configure_plugins(self, config):
+    def __configure_plugins(self, configuration):
         """ Configures plugins. 
         """
         for plugin in self.__plugins:
-            plugin.configure(config)
+            plugin.configure(configuration)
 
     def execute_from_cgi(self, command, chat_id):
         """ Executes from CGI to be able to filter accessible commands.
@@ -117,8 +117,8 @@ class MainClass(object):
             "db.add.temper.",
             "db.add.hum.",
         ]
-        for c in authorized_commands:
-            if command.find(c) != -1:
+        for cmd in authorized_commands:
+            if command.find(cmd) != -1:
                 retval = self.execute(command, chat_id)
                 break
         # return
@@ -138,11 +138,11 @@ class MainClass(object):
         # handle command in each plugin
         responses = self.__handle_plugins(command)
         if len(responses) > 0:
-            for r in responses:
-                if "text" in r:
-                    self.__telegram.send_telegram_text(chat_id, r["text"])
-                if "photo" in r:
-                    self.__telegram.send_telegram_photo(chat_id, r["photo"])
+            for resp in responses:
+                if "text" in resp:
+                    self.__telegram.send_telegram_text(chat_id, resp["text"])
+                if "photo" in resp:
+                    self.__telegram.send_telegram_photo(chat_id, resp["photo"])
             # return value
             retval = responses
 

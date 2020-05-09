@@ -22,7 +22,6 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import time
 import sys
 import re
-import random
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -35,14 +34,14 @@ colorlist = {}
 colorlist[DataBaseClass.NODE_ID_LOCAL] = "red"
 colorlist[DataBaseClass.NODE_ID_EXT] = "blue"
 colorlist[DataBaseClass.NODE_ID_VMC] = "green"
-colorlist[DataBaseClass.NODE_ID_UNDERGROUND] = "black"
+colorlist[DataBaseClass.NODE_ID_BASEMENT] = "black"
 
 # node name list
 nodenamelist = {}
 nodenamelist[DataBaseClass.NODE_ID_LOCAL] = "local"
 nodenamelist[DataBaseClass.NODE_ID_EXT] = "ext"
 nodenamelist[DataBaseClass.NODE_ID_VMC] = "vmc"
-nodenamelist[DataBaseClass.NODE_ID_UNDERGROUND] = "underground"
+nodenamelist[DataBaseClass.NODE_ID_BASEMENT] = "basement"
 
 # child name list
 childnamelist = {}
@@ -92,16 +91,16 @@ class StatisticsClass(DataBaseClass):
             self.NODE_ID_LOCAL,
             self.NODE_ID_EXT,
             self.NODE_ID_VMC,
-            self.NODE_ID_UNDERGROUND,
+            self.NODE_ID_BASEMENT,
         ]
-        exec = ExecClass(
+        exec_struct = ExecClass(
             nodelist,
             self.CHILD_ID_TEMP,
             self.TYPE_SET_TEMP,
             duration_str,
             "img_temper_" + duration_str + ".png",
         )
-        return self.update(exec)
+        return self.update(exec_struct)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
@@ -109,16 +108,16 @@ class StatisticsClass(DataBaseClass):
             self.NODE_ID_LOCAL,
             self.NODE_ID_EXT,
             self.NODE_ID_VMC,
-            self.NODE_ID_UNDERGROUND,
+            self.NODE_ID_BASEMENT,
         ]
-        exec = ExecClass(
+        exec_struct = ExecClass(
             nodelist,
             self.CHILD_ID_HUM,
             self.TYPE_SET_HUM,
             duration_str,
             "img_hum_" + duration_str + ".png",
         )
-        return self.update(exec)
+        return self.update(exec_struct)
 
     def update(self, exec_value):
         """ Returns a graph with one type of data from several  sources.
@@ -166,10 +165,10 @@ class StatisticsClass(DataBaseClass):
             for n in e.node_id:
                 try:
                     db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
-                    value = db_data[0][1]
+                    value_str = "%.1f" % db_data[0][1]
                     data["1-sensor-place"].append(nodenamelist[n])
                     data["3-last-update"].append(datetime.fromtimestamp(db_data[0][0]))
-                    data["2-" + childnamelist[e.child_sensor_id]].append(value)
+                    data["2-" + childnamelist[e.child_sensor_id]].append(value_str)
                 except:
                     print("[statistics] last entry not found")
 

@@ -76,7 +76,8 @@ def get_commands():
 def configure(config):
     """ Configures the plugin regarding configuration file.
     """
-    pass
+    # pylint: disable=W0613
+    return
 
 
 def main(argv):

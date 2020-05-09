@@ -19,9 +19,7 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 """
 
 import time
-import sys
 import serial
-import collections
 from threading import Thread
 from datetime import datetime
 from .database import DataBaseClass
