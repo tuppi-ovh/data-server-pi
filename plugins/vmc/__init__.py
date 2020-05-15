@@ -1,4 +1,3 @@
-
 """
 Data Server PI - high level application for the Smart Home data acquisition.
 Copyright (C) 2020 Vadim MUKHTAROV
@@ -47,7 +46,7 @@ def handle(command):
     # unknown command
     else:
         pass
-    # return 
+    # return
     return retval
 
 
@@ -62,4 +61,3 @@ def configure(config):
     """
     global config_www
     config_www = config.VMC_WWW_PATH
-

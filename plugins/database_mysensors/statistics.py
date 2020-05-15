@@ -22,7 +22,6 @@ For information on Data Server PI: tuppi.ovh@gmail.com
 import time
 import sys
 import re
-import random
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -32,25 +31,25 @@ from .database import DataBaseClass
 
 # graph colors
 colorlist = {}
-colorlist[DataBaseClass.NODE_ID_LOCAL] = 'red'
-colorlist[DataBaseClass.NODE_ID_EXT] = 'blue'
-colorlist[DataBaseClass.NODE_ID_VMC] = 'green'
-colorlist[DataBaseClass.NODE_ID_UNDERGROUND] = 'black'
+colorlist[DataBaseClass.NODE_ID_LOCAL] = "red"
+colorlist[DataBaseClass.NODE_ID_EXT] = "blue"
+colorlist[DataBaseClass.NODE_ID_VMC] = "green"
+colorlist[DataBaseClass.NODE_ID_BASEMENT] = "black"
 
 # node name list
 nodenamelist = {}
-nodenamelist[DataBaseClass.NODE_ID_LOCAL] = 'local'
-nodenamelist[DataBaseClass.NODE_ID_EXT] = 'ext'
-nodenamelist[DataBaseClass.NODE_ID_VMC] = 'vmc'
-nodenamelist[DataBaseClass.NODE_ID_UNDERGROUND] = 'underground'
+nodenamelist[DataBaseClass.NODE_ID_LOCAL] = "local"
+nodenamelist[DataBaseClass.NODE_ID_EXT] = "ext"
+nodenamelist[DataBaseClass.NODE_ID_VMC] = "vmc"
+nodenamelist[DataBaseClass.NODE_ID_BASEMENT] = "basement"
 
 # child name list
 childnamelist = {}
-childnamelist[DataBaseClass.CHILD_ID_TEMP] = 'temper'
-childnamelist[DataBaseClass.CHILD_ID_HUM] = 'hum'
+childnamelist[DataBaseClass.CHILD_ID_TEMP] = "temper"
+childnamelist[DataBaseClass.CHILD_ID_HUM] = "hum"
 
 
-class ExecClass():
+class ExecClass:
     """ Class to stock execution arguments."""
 
     def __init__(self, node_id, child_sensor_id, typ, duration, filename):
@@ -69,18 +68,18 @@ class StatisticsClass(DataBaseClass):
     def __timestamp_begin_calc(self, ts_now, duration_str):
         """ Returns timestamp begin for the selected type of output (1d, 1m, 1y)."""
         # numeric value
-        value = int(re.search(r'\d+', duration_str).group())
+        value = int(re.search(r"\d+", duration_str).group())
         # convert string to a factor
-        if duration_str.find('y') > 0:
-            value *= (365 * 24 * 60 * 60)
-        elif duration_str.find('m') > 0:
-            value *= (30 * 24 * 60 * 60)
-        elif duration_str.find('w') > 0:
-            value *= (7 * 24 * 60 * 60)
-        elif duration_str.find('d') > 0:
-            value *= (24 * 60 * 60)
-        elif duration_str.find('h') > 0:
-            value *= (60 * 60)
+        if duration_str.find("y") > 0:
+            value *= 365 * 24 * 60 * 60
+        elif duration_str.find("m") > 0:
+            value *= 30 * 24 * 60 * 60
+        elif duration_str.find("w") > 0:
+            value *= 7 * 24 * 60 * 60
+        elif duration_str.find("d") > 0:
+            value *= 24 * 60 * 60
+        elif duration_str.find("h") > 0:
+            value *= 60 * 60
         else:
             value *= 1
         # return
@@ -88,48 +87,73 @@ class StatisticsClass(DataBaseClass):
 
     def update_temperature(self, duration_str):
         """ Updates last value temperature. """
-        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
-        exec = ExecClass(nodelist, self.CHILD_ID_TEMP, 
-                        self.TYPE_SET_TEMP, duration_str, "img_temper_" + duration_str + ".png")
-        return self.update(exec)
+        nodelist = [
+            self.NODE_ID_LOCAL,
+            self.NODE_ID_EXT,
+            self.NODE_ID_VMC,
+            self.NODE_ID_BASEMENT,
+        ]
+        exec_struct = ExecClass(
+            nodelist,
+            self.CHILD_ID_TEMP,
+            self.TYPE_SET_TEMP,
+            duration_str,
+            "img_temper_" + duration_str + ".png",
+        )
+        return self.update(exec_struct)
 
     def update_humidity(self, duration_str):
         """ Updates last value humidity. """
-        nodelist = [self.NODE_ID_LOCAL, self.NODE_ID_EXT, self.NODE_ID_VMC, self.NODE_ID_UNDERGROUND]
-        exec = ExecClass(nodelist, self.CHILD_ID_HUM, 
-                        self.TYPE_SET_HUM, duration_str, "img_hum_" + duration_str + ".png")
-        return self.update(exec)
+        nodelist = [
+            self.NODE_ID_LOCAL,
+            self.NODE_ID_EXT,
+            self.NODE_ID_VMC,
+            self.NODE_ID_BASEMENT,
+        ]
+        exec_struct = ExecClass(
+            nodelist,
+            self.CHILD_ID_HUM,
+            self.TYPE_SET_HUM,
+            duration_str,
+            "img_hum_" + duration_str + ".png",
+        )
+        return self.update(exec_struct)
 
     def update(self, exec_value):
         """ Returns a graph with one type of data from several  sources.
         Example: temperature internal & external.
         """
-        # return value 
+        # return value
         retval = None
         # current time
         ts_now = int(time.mktime(datetime.now().timetuple()))
-        # exec 
+        # exec
         e = exec_value
         # two treatments regarding duration
-        if (e.duration != "0"):
+        if e.duration != "0":
             # loop on all nodes
             for n in e.node_id:
                 dates = []
                 values = []
                 # extract values
                 data = self._database_select_entries(
-                    n, e.child_sensor_id, e.type, self.__timestamp_begin_calc(ts_now, e.duration), ts_now)
+                    n,
+                    e.child_sensor_id,
+                    e.type,
+                    self.__timestamp_begin_calc(ts_now, e.duration),
+                    ts_now,
+                )
                 for d in data:
                     dates.append(datetime.fromtimestamp(d[1]))
                     values.append(d[2])
                 plt.plot(dates, values, label=nodenamelist[n], color=colorlist[n])
             # plot
-            plt.legend(loc='upper left')
+            plt.legend(loc="upper left")
             plt.gcf().autofmt_xdate()
             plt.savefig(e.filename)
             # clear for the next iteration
             plt.clf()
-            # return value 
+            # return value
             retval = e.filename
 
         else:
@@ -141,10 +165,10 @@ class StatisticsClass(DataBaseClass):
             for n in e.node_id:
                 try:
                     db_data = self._database_last_entry(n, e.child_sensor_id, e.type)
-                    value = db_data[0][1]
+                    value_str = "%.1f" % db_data[0][1]
                     data["1-sensor-place"].append(nodenamelist[n])
                     data["3-last-update"].append(datetime.fromtimestamp(db_data[0][0]))
-                    data["2-" + childnamelist[e.child_sensor_id]].append(value)
+                    data["2-" + childnamelist[e.child_sensor_id]].append(value_str)
                 except:
                     print("[statistics] last entry not found")
 
@@ -157,22 +181,25 @@ class StatisticsClass(DataBaseClass):
             ax.yaxis.set_visible(False)  # hide the y axis
 
             # plot table
-            tbl = plt.table(cellText=df.values,
-                            rowLabels=df.index,
-                            colLabels=df.columns,
-                            cellLoc='center', rowLoc='center',
-                            loc='center')
+            tbl = plt.table(
+                cellText=df.values,
+                rowLabels=df.index,
+                colLabels=df.columns,
+                cellLoc="center",
+                rowLoc="center",
+                loc="center",
+            )
             tbl.auto_set_font_size(False)
             tbl.set_fontsize(24)
             tbl.scale(4, 4)
-            plt.savefig(e.filename, bbox_inches='tight',
-                        pad_inches=0.05)
+            plt.savefig(e.filename, bbox_inches="tight", pad_inches=0.05)
             # clear for the next iteration
             plt.clf()
-            # return value 
+            # return value
             retval = e.filename
 
         return retval
+
 
 def main(argv):
     """Main function with arguments."""
@@ -198,7 +225,7 @@ def main(argv):
 # declaration for pandas timestamp
 register_matplotlib_converters()
 
-# Standalone execution: python3 statistics.py <database> 
+# Standalone execution: python3 statistics.py <database>
 # Example: python3 .\github\data-server-pi\statistics.py .\MySensors.db
 if __name__ == "__main__":
     main(sys.argv)

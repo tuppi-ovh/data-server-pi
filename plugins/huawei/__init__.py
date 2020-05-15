@@ -34,14 +34,18 @@ COMMANDS = [{"command": "huawei", "description": ""}]
 config_url = None
 
 
-
 def __get_usage_gbytes():
     """
     """
     try:
         connection = AuthorizedConnection(config_url)
-        stats = connection.get('monitoring/month_statistics')
-        usage = (int(stats["CurrentMonthDownload"]) + int(stats["CurrentMonthUpload"])) / 1024 / 1024 / 1024
+        stats = connection.get("monitoring/month_statistics")
+        usage = (
+            (int(stats["CurrentMonthDownload"]) + int(stats["CurrentMonthUpload"]))
+            / 1024
+            / 1024
+            / 1024
+        )
         return "{:.2f} GB".format(usage)
     except:
         return "no access"
@@ -58,7 +62,7 @@ def handle(command):
     # other commands
     else:
         pass
-    # return 
+    # return
     return retval
 
 
@@ -78,18 +82,17 @@ def configure(config):
 def main(argv):
     """ Main function."""
     # config
-    config = collections.namedtuple('config', ['HUAWEI_URL'])
+    config = collections.namedtuple("config", ["HUAWEI_URL"])
     config.HUAWEI_URL = argv[2]
     configure(config)
     # handle
     msg = handle(argv[1])
-    # print 
+    # print
     if len(msg) > 0:
         print(msg[0]["text"])
 
 
-# Usage: python3 __init__.py <command> 
+# Usage: python3 __init__.py <command>
 # Usage example: python3 .\plugins\huawei\__init__.py huawei http://admin:admin@192.168.8.1/
 if __name__ == "__main__":
     main(sys.argv)
-

@@ -38,9 +38,16 @@ class AddClass(DataBaseClass):
         # timestamp
         timestamp = int(time.mktime(datetime.now().timetuple()))
         # write to database
-        self._database_add_entry(timestamp, node_id, self.CHILD_ID_TEMP, self.CMD_SET,
-                                    self.ACK_NONE, self.TYPE_SET_TEMP, temper_x10 * 0.1)
-        self._database_commit()                                    
+        self._database_add_entry(
+            timestamp,
+            node_id,
+            self.CHILD_ID_TEMP,
+            self.CMD_SET,
+            self.ACK_NONE,
+            self.TYPE_SET_TEMP,
+            temper_x10 * 0.1,
+        )
+        self._database_commit()
 
     def add_humidity(self, node_id, humidity_x10):
         """
@@ -51,6 +58,13 @@ class AddClass(DataBaseClass):
         # timestamp
         timestamp = int(time.mktime(datetime.now().timetuple()))
         # write to database
-        self._database_add_entry(timestamp, node_id, self.CHILD_ID_HUM, self.CMD_SET,
-                                    self.ACK_NONE, self.TYPE_SET_HUM, humidity_x10 * 0.1)
+        self._database_add_entry(
+            timestamp,
+            node_id,
+            self.CHILD_ID_HUM,
+            self.CMD_SET,
+            self.ACK_NONE,
+            self.TYPE_SET_HUM,
+            humidity_x10 * 0.1,
+        )
         self._database_commit()
