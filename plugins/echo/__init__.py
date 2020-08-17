@@ -35,7 +35,7 @@ def handle(command):
     retval = []
     # about program
     if command.find("echo.") != -1:
-         text = command[5:len(command)]
+        text = command[5:len(command)]
         retval.append({"text": text})
     # unknown command
     else:
