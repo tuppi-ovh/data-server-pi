@@ -25,9 +25,6 @@ import sys
 # constants
 COMMANDS = [{"command": "echo.<message.with.points>", "description": ""}]
 
-# config
-config_www = None
-
 
 def handle(command):
     """ Handles echo command.
@@ -49,3 +46,9 @@ def get_commands():
     """
     return COMMANDS
 
+
+def configure(config):
+    """ Configures the plugin regarding configuration file.
+    """
+    # pylint: disable=W0613
+    return
