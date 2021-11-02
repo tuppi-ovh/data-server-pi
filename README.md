@@ -46,6 +46,9 @@ HUAWEI_URL = "http://admin:admin@192.168.0.1/"
 # URL to prefered meteo site 
 METEO_URL = "http://xxxxxxxxxxxxxxxx.com"
 
+# Absolut path to vmc web server
+VMC_WWW_PATH = "/absolut/path/to/webserver/www"
+
 # Enabled plugins (about is forced to be enabled)
 MAIN_PLUGINS = ["meteo", "mysensors", "huawei", "mysensors"]
 ```
@@ -153,6 +156,12 @@ sudo systemctl start data-server-pi-httpd.service
 sudo systemctl status data-server-pi-httpd.service
 ```
 
+# Message Automatization with CRON
+
+We add this line by `sudo crontab -e`:
+```
+0 21 * * * /usr/bin/python3 /absulut/path/to/the/project/__init__.py <command> <chat_id>
+```
 
 # References
 

@@ -28,7 +28,10 @@ from huawei_lte_api.Connection import Connection
 
 
 # constants
-COMMANDS = [{"command": "huawei", "description": ""}]
+COMMANDS = [
+    {"command": "huawei.usage", "description": ""},
+    {"command": "huawei.test", "description": ""}
+]
 
 # config
 config_url = None
@@ -50,14 +53,27 @@ def __get_usage_gbytes():
     except:
         return "no access"
 
+def __test():
+    """
+    """
+    retval = ""
+    with Connection(config_url) as connection:
+        client = Client(connection) 
+        retval = str(client.device.signal())  
+        retval = retval + "\n" + str(client.device.information()) 
+    return retval
 
 def handle(command):
     """ Handles telegram command.
     """
     retval = []
     # internet usage
-    if command == "huawei":
+    if command == "huawei.usage":
         text = __get_usage_gbytes()
+        retval.append({"text": text})
+    # test
+    elif command == "huawei.test":
+        text = __test()
         retval.append({"text": text})
     # other commands
     else:
@@ -93,6 +109,6 @@ def main(argv):
 
 
 # Usage: python3 __init__.py <command>
-# Usage example: python3 .\plugins\huawei\__init__.py huawei http://admin:admin@192.168.8.1/
+# Usage example: python3 plugins/huawei/__init__.py huawei http://admin:admin@192.168.8.1/
 if __name__ == "__main__":
     main(sys.argv)

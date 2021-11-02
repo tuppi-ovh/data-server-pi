@@ -1,6 +1,7 @@
 __pycache__/
 www/
 venv/
+.venv/
 config.py
 *.db
 *.png
