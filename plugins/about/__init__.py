@@ -1,6 +1,6 @@
 """
 Data Server PI - high level application for the Smart Home data acquisition.
-Copyright (C) 2020-2021 tuppi-ovh
+Copyright (C) 2020-2023 tuppi-ovh
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ def handle(command):
     # about program
     if command == "about":
         text = (
-            "Data Server PI - Copyright (C) 2020-2021 tuppi-ovh\n"
+            "Data Server PI - Copyright (C) 2020-2023 tuppi-ovh\n"
             "This program comes with ABSOLUTELY NO WARRANTY; for details send the command 'show-w'. "
             "This is free software, and you are welcome to redistribute it "
             "under certain conditions; send the command 'show-c' for details."

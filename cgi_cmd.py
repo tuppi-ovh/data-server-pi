@@ -2,7 +2,7 @@
 
 """
 Data Server PI - high level application for the Smart Home data acquisition.
-Copyright (C) 2020-2021 tuppi-ovh
+Copyright (C) 2020-2023 tuppi-ovh
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
