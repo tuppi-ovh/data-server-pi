@@ -51,6 +51,9 @@ VMC_WWW_PATH = "/absolut/path/to/webserver/www"
 
 # Enabled plugins (about is forced to be enabled)
 MAIN_PLUGINS = ["meteo", "mysensors", "huawei", "mysensors"]
+
+# Absolut path to plugins 
+MAIN_PLUGINS_PATH = "/absolut/path/to/plugins"
 ```
 
 

@@ -109,16 +109,19 @@ class TelegramClass:
 
                     # commands
                     for update in updates["result"]:
-                        chat_id = update["message"]["chat"]["id"]
-                        text = update["message"]["text"].lower()
-                        # debug: print("chat_id: " + str(chat_id))
-                        if chat_id in config.TELEGRAM_CHAT_ID_LIST:
-                            command = {}
-                            command["chat_id"] = chat_id
-                            command["command"] = text
-                            commands.append(command)
-                            # log
-                            print("recv command=" + text + " chatid=" + str(chat_id))
+                        print(update)
+                        if "message" in update:
+                            chat_id = update["message"]["chat"]["id"]
+                            if "text" in update["message"]:
+                                text = update["message"]["text"].lower()
+                                # debug: print("chat_id: " + str(chat_id))
+                                if chat_id in config.TELEGRAM_CHAT_ID_LIST:
+                                    command = {}
+                                    command["chat_id"] = chat_id
+                                    command["command"] = text
+                                    commands.append(command)
+                                    # log
+                                    print("recv command=" + text + " chatid=" + str(chat_id))
 
         return commands
 
