@@ -1,0 +1,3 @@
+[submodule "plugins/private_crypto"]
+	path = plugins/private_crypto
+	url = git@github.com:tuppi-ovh/data-server-pi-crypto.git
