@@ -30,6 +30,7 @@ from telegram import TelegramClass
 COMMANDS = (
     {"command": "help", "description": ""},
     {"command": "auto", "description": ""},
+    {"command": "stop", "description": "Stop service execution"},
 )
 
 
@@ -45,6 +46,8 @@ class MainClass:
         self.__list_plugins()
         self.__load_plugins()
         self.__configure_plugins(config)
+        # vars
+        self.__stop = False
 
     def __handle_plugins(self, command):
         """ Handles plugins. 
@@ -145,20 +148,30 @@ class MainClass:
                     self.__telegram.send_telegram_photo(chat_id, resp["photo"])
             # return value
             retval = responses
-
+        
         # help
         elif command == "help":
             text = self.__get_commands_plugins()
             self.__telegram.send_telegram_text(chat_id, text)
-            # return value
+            retval = [{"text": text}]
+
+        # stop and exit
+        elif command == "stop":
+            text = "Stopping the service execution..."
+            self.__telegram.send_telegram_text(chat_id, text)
+            self.__stop = True
             retval = [{"text": text}]
 
         # recursive execution in automatic mode, not from telegram
         elif command == "auto":
-            while True:
+            stop_last = False
+            stop_last_last = False
+            while not stop_last_last:
                 commands = self.__telegram.recv_telegram_commands()
                 for cmd in commands:
                     self.execute(cmd["command"], cmd["chat_id"])
+                stop_last_last = stop_last
+                stop_last = self.__stop
                 time.sleep(1)
 
         # unknown command
