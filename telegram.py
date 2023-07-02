@@ -38,7 +38,7 @@ class TelegramClass:
     def send_telegram_text(self, chatid, message):
         """ Send text message to destination.
         """
-        data = {"chat_id": str(chatid), "text": message}
+        data = {"chat_id": str(chatid), "text": message, "parse_mode": "Markdown"}
         if chatid != -1:
             __ = requests.get(URL + "/sendMessage", params=data)
         # log
