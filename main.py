@@ -168,7 +168,7 @@ class MainClass:
             text = ""
             commands = self.__telegram.recv_telegram_commands()
             for cmd in commands:
-                t = f"Skip command {cmd["command"]}
+                t = f"Skip command {cmd['command']}"
                 text = f"{text}; {t}"
                 self.__telegram.send_telegram_text(chat_id, t)
             retval = [{"text": text}]
