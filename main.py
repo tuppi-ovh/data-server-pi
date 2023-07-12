@@ -169,6 +169,7 @@ class MainClass:
             commands = self.__telegram.recv_telegram_commands()
             for cmd in commands:
                 text = text + " " + cmd["command"]
+            self.__telegram.send_telegram_text(chat_id, text)
             retval = [{"text": text}]
 
         # recursive execution in automatic mode, not from telegram
