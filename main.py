@@ -28,9 +28,10 @@ from telegram import TelegramClass
 
 # constants
 COMMANDS = (
-    {"command": "help", "description": ""},
-    {"command": "auto", "description": ""},
+    {"command": "help", "description": "Return a help message"},
+    {"command": "auto", "description": "Continious reception of telegram commands"},
     {"command": "stop", "description": "Stop service execution"},
+    {"command": "skip", "description": "Skip telegram messages in case of error"},
 )
 
 
@@ -160,6 +161,14 @@ class MainClass:
             text = "Stopping the service execution..."
             self.__telegram.send_telegram_text(chat_id, text)
             self.__stop = True
+            retval = [{"text": text}]
+
+        # skip telegram messages
+        elif command == "skip":
+            text = "Skip these commands:"
+            commands = self.__telegram.recv_telegram_commands()
+            for cmd in commands:
+                text = text + " " + cmd["command"]
             retval = [{"text": text}]
 
         # recursive execution in automatic mode, not from telegram
