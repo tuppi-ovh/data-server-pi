@@ -167,10 +167,13 @@ class MainClass:
         elif command == "skip":
             text = ""
             commands = self.__telegram.recv_telegram_commands()
+            # handle commands
             for cmd in commands:
                 t = f"Skip command {cmd['command']}"
                 text = f"{text}; {t}"
                 self.__telegram.send_telegram_text(chat_id, t)
+            # update last message id
+            commands = self.__telegram.recv_telegram_commands()
             retval = [{"text": text}]
 
         # recursive execution in automatic mode, not from telegram
