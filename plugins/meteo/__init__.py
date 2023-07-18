@@ -110,7 +110,6 @@ def __get_meteo(day):
     output = output.replace("  ", " ")
     return output
 
-
 def handle(command):
     """ Handles telegram command.
     """
@@ -130,19 +129,22 @@ def handle(command):
     # return
     return retval
 
+def handle_bgnd():
+    """ Bgnd task.
+    """
+    retval = []
+    return retval
 
 def get_commands():
     """ Returns a list of all supporteed commands.
     """
     return COMMANDS
 
-
 def configure(config):
     """ Configures the plugin regarding configuration file.
     """
     global config_url
     config_url = config.METEO_URL
-
 
 def main(argv):
     """ Main function."""
@@ -155,7 +157,6 @@ def main(argv):
     # print
     if len(msg) > 0:
         print(msg[0]["text"])
-
 
 # Usage: python3 __init__.py <command> <config_url>
 # Usage example: python3 .\plugins\meteo\__init__.py meteo.demain <config_url>

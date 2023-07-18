@@ -23,5 +23,5 @@ import sys
 import main
 
 mainc = main.MainClass()
-result = mainc.execute(sys.argv[1], int(sys.argv[2]))
+result = mainc.handle_command(sys.argv[1], int(sys.argv[2]))
 print(result)

@@ -40,12 +40,16 @@ def handle(command):
     # return
     return retval
 
+def handle_bgnd():
+    """ Bgnd task.
+    """
+    retval = []
+    return retval
 
 def get_commands():
     """ Returns a list of all supporteed commands.
     """
     return COMMANDS
-
 
 def configure(config):
     """ Configures the plugin regarding configuration file.

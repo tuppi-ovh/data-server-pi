@@ -31,7 +31,7 @@ chat_id = int(form.getvalue("chat_id"))
 
 # execute
 mainc = main.MainClass()
-result = mainc.execute_from_cgi(command, chat_id)
+result = mainc.handle_from_cgi(command, chat_id)
 
 # print on html page 
 print("\nExecution result:\n")

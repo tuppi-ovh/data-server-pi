@@ -50,8 +50,19 @@ class MainClass:
         # vars
         self.__stop = False
 
-    def __handle_plugins(self, command):
-        """ Handles plugins. 
+    def __handle_bgnd_plugins(self):
+        """ Handle plugin bgnd tasks. 
+        """
+        retval = []
+        for plugin in self.__plugins:
+            result = plugin.handle_bgnd()
+            if len(result) > 0:
+                retval = result
+                break
+        return retval
+
+    def __handle_command_plugins(self, command):
+        """ Handle command in plugin.
         """
         retval = []
         for plugin in self.__plugins:
@@ -109,7 +120,7 @@ class MainClass:
         for plugin in self.__plugins:
             plugin.configure(configuration)
 
-    def execute_from_cgi(self, command, chat_id):
+    def handle_from_cgi(self, command, chat_id):
         """ Executes from CGI to be able to filter accessible commands.
         """
         retval = None
@@ -123,12 +134,12 @@ class MainClass:
         ]
         for cmd in authorized_commands:
             if command.find(cmd) != -1:
-                retval = self.execute(command, chat_id)
+                retval = self.handle_command(command, chat_id)
                 break
         # return
         return retval
 
-    def execute(self, command, chat_id):
+    def handle_command(self, command, chat_id):
         """ 
         @brief Handles a command. 
         @param command - string value of telegram command.
@@ -140,7 +151,7 @@ class MainClass:
         print("[main] cmd=" + command + " chat_id=" + str(chat_id))
 
         # handle command in each plugin
-        responses = self.__handle_plugins(command)
+        responses = self.__handle_command_plugins(command)
         if len(responses) > 0:
             for resp in responses:
                 if "text" in resp:
@@ -181,9 +192,13 @@ class MainClass:
             stop_last = False
             stop_last_last = False
             while not stop_last_last:
+                # commands
                 commands = self.__telegram.recv_telegram_commands()
                 for cmd in commands:
-                    self.execute(cmd["command"], cmd["chat_id"])
+                    self.handle_command(cmd["command"], cmd["chat_id"])
+                # bgnd
+                self.handle_bgnd(config.MAIN_BGND_CHAT_ID)
+                # stop if required
                 stop_last_last = stop_last
                 stop_last = self.__stop
                 time.sleep(1)
@@ -199,13 +214,26 @@ class MainClass:
 
         return retval
 
+    def handle_bgnd(self, chat_id):
+        """ 
+        @brief Handles a command. 
+        @param command - string value of telegram command.
+        @param chat_id - integer value of telegram chat ID.
+        """
+        # handle bgnd in each plugin
+        responses = self.__handle_bgnd_plugins()
+        if len(responses) > 0:
+            for resp in responses:
+                if "text" in resp:
+                    self.__telegram.send_telegram_text(chat_id, resp["text"])
+                if "photo" in resp:
+                    self.__telegram.send_telegram_photo(chat_id, resp["photo"])
 
 def main(argv):
     """ Main function.
     """
     mainc = MainClass()
-    mainc.execute(argv[1], argv[2])
-
+    mainc.handle_command(argv[1], argv[2])
 
 # Usage: python3 main.py <command> <chat_id>
 # Usage example: python3 .\main.py auto -1

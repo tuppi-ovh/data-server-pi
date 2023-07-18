@@ -104,12 +104,16 @@ def handle(command):
     # return
     return retval
 
+def handle_bgnd():
+    """ Bgnd task.
+    """
+    retval = []
+    return retval
 
 def get_commands():
     """ Returns a list of all supporteed commands.
     """
     return COMMANDS
-
 
 def configure(config):
     """ Configures the plugin regarding configuration file.
@@ -118,7 +122,6 @@ def configure(config):
     global config_serial_port
     config_database = config.DATABASE_FILENAME
     config_serial_port = config.MYSENSORS_SERIAL_PORT
-
 
 def main(argv):
     """ Main function for standalone execution.
@@ -138,7 +141,6 @@ def main(argv):
     # print
     if len(msg) > 0:
         print(msg[0]["text"])
-
 
 # Usage: python3 __init__.py <command> <database> <serial_port>
 # Usage example: python3 .\plugins\mysensors_daemon\__init__.py mysensors-dont-call-from-telegram .\MySensors.db None

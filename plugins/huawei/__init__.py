@@ -130,12 +130,16 @@ def handle(command):
     # return
     return retval
 
+def handle_bgnd():
+    """ Bgnd task.
+    """
+    retval = []
+    return retval
 
 def get_commands():
     """ Returns a list of all supporteed commands.
     """
     return COMMANDS
-
 
 def configure(config):
     """ Configures the plugin regarding configuration file.
@@ -161,7 +165,6 @@ def main(argv):
     # print
     if len(msg) > 0:
         print(msg[0]["text"])
-
 
 # Usage example: python3 plugins/huawei/__init__.py huawei.usage http://admin:admin@192.168.8.1/ 1 100
 if __name__ == "__main__":

@@ -66,19 +66,22 @@ def handle(command):
     # return
     return retval
 
+def handle_bgnd():
+    """ Bgnd task.
+    """
+    retval = []
+    return retval
 
 def get_commands():
     """ Returns a list of all supporteed commands.
     """
     return COMMANDS
 
-
 def configure(config):
     """ Configures the plugin regarding configuration file.
     """
     # pylint: disable=W0613
     return
-
 
 def main(argv):
     """ Main function."""
@@ -90,7 +93,6 @@ def main(argv):
     # print
     if len(msg) > 0:
         print(msg[0]["text"])
-
 
 # Usage: python3 __init__.py <command>
 # Usage example: python3 .\plugins\about\__init__.py about
